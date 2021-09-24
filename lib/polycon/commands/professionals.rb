@@ -1,3 +1,6 @@
+require 'polycon/utils.rb'
+require 'polycon/models/professional.rb'
+
 module Polycon
   module Commands
     module Professionals
@@ -12,7 +15,14 @@ module Polycon
         ]
 
         def call(name:, **)
-          warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar creación de un o una profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if Polycon::Models::Professional.ensure_professional_exists(name)
+            warn "El profesional ya existe"
+          else
+            Polycon::Models::Professional.create_directory_professional(name)
+            warn "Se ha creado el profesional exitosamente"
+          end
         end
       end
 
@@ -27,7 +37,19 @@ module Polycon
         ]
 
         def call(name: nil)
-          warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar borrado de la o el profesional con nombre '#{name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #FileUtils.rm_rf("#{ENV["HOME"]}/polycon/#{name}")
+          Polycon::Utils.ensure_polycon_exists
+            if Polycon::Models::Professional.ensure_professional_exists(name)
+              if not (Polycon::Models::Professional.have_appointments?(name))
+                FileUtils.rm_rf(name)
+                warn "Profesional eliminado exitosamente"
+              else
+                warn "Hay turnos pendientes"
+              end
+            else
+              warn "El profesional ingresado no existe"
+            end
         end
       end
 
@@ -39,7 +61,15 @@ module Polycon
         ]
 
         def call(*)
-          warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar listado de profesionales.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if (Polycon::Models::Professional.professional_names).empty?
+            warn "No hay profesionales"
+          else
+            (Polycon::Models::Professional.professional_names).each do |professional|
+              puts professional
+            end
+          end
         end
       end
 
@@ -54,7 +84,14 @@ module Polycon
         ]
 
         def call(old_name:, new_name:, **)
-          warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar renombrado de profesionales con nombre '#{old_name}' para que pase a llamarse '#{new_name}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+            if Polycon::Models::Professional.ensure_professional_exists(old_name)
+              File.rename(old_name, new_name)
+              warn "El nombre se ha modificado exitosamente"
+            else
+              warn "El profesional ingresado no existe"
+            end
         end
       end
     end

@@ -1,3 +1,6 @@
+require 'polycon/utils.rb'
+require 'polycon/models/professional.rb'
+require 'polycon/models/appointment.rb'
 module Polycon
   module Commands
     module Appointments
@@ -16,7 +19,14 @@ module Polycon
         ]
 
         def call(date:, professional:, name:, surname:, phone:, notes: nil)
-          warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar creación de un turno con fecha '#{date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if not Polycon::Models::Professional.ensure_professional_exists(professional)
+            Polycon::Models::Professional.create_directory_professional(professional)
+          end
+          Dir.chdir("./#{professional}")
+          Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes)
+          warn "Turno creado exitosamente"
         end
       end
 
@@ -92,7 +102,21 @@ module Polycon
         ]
 
         def call(old_date:, new_date:, professional:)
-          warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar cambio de fecha de turno con fecha '#{old_date}' para que pase a ser '#{new_date}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if Polycon::Models::Professional.ensure_professional_exists(professional)
+            Dir.chdir("./#{professional}")
+            old_date = Polycon::Models::Appointment.date_format(old_date)
+            new_date = Polycon::Models::Appointment.date_format(new_date)
+            if Polycon::Models::Appointment.ensure_appointment_exists(old_date)
+              Polycon::Models::Appointment.reschedule_appointment(old_date, new_date)
+              warn "El turno se ha modificado exitosamente"
+            else
+              warn "No existe turno con esa fecha y hora"
+            end
+          else
+            warn "No existe el profesional"
+          end
         end
       end
 
@@ -113,7 +137,25 @@ module Polycon
         ]
 
         def call(date:, professional:, **options)
-          warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          if File.exists?("#{ENV["HOME"]}/polycon")
+            Dir.chdir("#{ENV["HOME"]}/polycon/#{professional}")
+            date = date.gsub " ", "_"
+            #options.each_value{|option| puts option}
+            options.each do |key, value|
+              linea = 1
+              archivo = File.open("#{date}.paf").write
+              archivo.each_line do line
+                if (linea == 1)
+                  puts "hola"
+                end
+                linea += 1
+              end
+            end
+            #File.open("#{date}.paf", "r+") {|file| file.write("hola")}
+          else
+            warn "No existe el directorio polycon"
+          end
         end
       end
     end
