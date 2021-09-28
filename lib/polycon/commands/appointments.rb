@@ -95,7 +95,15 @@ module Polycon
         ]
 
         def call(professional:)
-          warn "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar borrado de todos los turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if Polycon::Models::Professional.ensure_professional_exists(professional)
+            Dir.chdir("./#{professional}")
+            Polycon::Models::Appointment.cancel_all_appointments
+            warn "Se han cancelado todos los turnos del profesional #{professional}"
+          else
+            warn "No existe el profesional"
+          end
         end
       end
 

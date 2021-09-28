@@ -27,6 +27,10 @@ module Polycon
       def self.cancel_appointment(date)
         File.delete(date)
       end
+
+      def self.cancel_all_appointments
+        FileUtils.rm_rf(Dir.glob('./*'))
+      end
     end
   end
 end
