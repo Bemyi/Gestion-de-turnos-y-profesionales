@@ -17,6 +17,12 @@ module Polycon
       def self.reschedule_appointment(old_date, new_date)
         File.rename(old_date, new_date)
       end
+
+      def self.show_appointment(date)
+        File.readlines(date).each do |line|
+          puts line
+        end
+      end
     end
   end
 end

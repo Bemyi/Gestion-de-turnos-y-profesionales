@@ -41,7 +41,15 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar detalles de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if Polycon::Models::Professional.ensure_professional_exists(professional)
+            Dir.chdir("./#{professional}")
+            date = Polycon::Models::Appointment.date_format(date)
+            if (Polycon::Models::Appointment.ensure_appointment_exists(date))
+              Polycon::Models::Appointment.show_appointment(date)
+            end
+          end
         end
       end
 
