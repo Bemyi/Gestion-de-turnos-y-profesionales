@@ -48,7 +48,11 @@ module Polycon
             date = Polycon::Models::Appointment.date_format(date)
             if (Polycon::Models::Appointment.ensure_appointment_exists(date))
               Polycon::Models::Appointment.show_appointment(date)
+            else
+              warn "No existe turno con esa fecha y hora"
             end
+          else
+            warn "No existe el profesional"
           end
         end
       end
@@ -64,7 +68,8 @@ module Polycon
         ]
 
         def call(date:, professional:)
-          warn "TODO: Implementar borrado de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          #warn "TODO: Implementar borrado de un turno con fecha '#{date}' y profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          
         end
       end
 
