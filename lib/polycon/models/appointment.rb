@@ -23,6 +23,10 @@ module Polycon
           puts line
         end
       end
+
+      def self.cancel_appointment(date)
+        File.delete(date)
+      end
     end
   end
 end
