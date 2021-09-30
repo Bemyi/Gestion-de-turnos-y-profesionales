@@ -31,6 +31,19 @@ module Polycon
       def self.cancel_all_appointments
         FileUtils.rm_rf(Dir.glob('./*'))
       end
+
+      def self.appointments(date)
+        i=0
+        appointments = []
+        Dir.foreach(".") do |appointment|
+          next if appointment == "." or appointment == ".."
+          if (appointment[..-11] == date)
+            appointments[i] = appointment[..-5]
+            i+=1
+          end
+        end
+        return appointments
+      end
     end
   end
 end

@@ -118,8 +118,21 @@ module Polycon
           '"Alma Estevez" --date="2021-09-16" # Lists appointments for Alma Estevez on the specified date'
         ]
 
-        def call(professional:)
-          warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+        def call(professional:, date:nil)
+          #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
+          Polycon::Utils.ensure_polycon_exists
+          if Polycon::Models::Professional.ensure_professional_exists(professional)
+            Dir.chdir("./#{professional}")
+            if (Polycon::Models::Appointment.appointments(date)).empty?
+              warn "No hay turnos para esta fecha"
+            else
+              (Polycon::Models::Appointment.appointments(date)).each do |appointment|
+                puts appointment
+              end
+            end
+          else
+            warn "No existe el profesional"
+          end
         end
       end
 
