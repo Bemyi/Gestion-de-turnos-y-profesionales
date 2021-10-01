@@ -1,9 +1,11 @@
+require 'date'
 module Polycon
   module Models
     class Appointment
+      attr_accessor :name, :surname, :phone, :notes
       def self.create_appointment(date, name, surname, phone, notes)
         date = date.gsub " ", "_"
-        File.open("#{date}.paf", "w") {|file| file.write("#{name}\n#{surname}\n#{phone}\n#{notes}")}
+        File.open("#{date}.paf", "w") {|file| file.write("#{surname}\n#{name}\n#{phone}\n#{notes}")}
       end
 
       def self.date_format(date)
@@ -32,17 +34,48 @@ module Polycon
         FileUtils.rm_rf(Dir.glob('./*'))
       end
 
-      def self.appointments(date)
+      def self.appointments(date, professional)
         i=0
         appointments = []
-        Dir.foreach(".") do |appointment|
-          next if appointment == "." or appointment == ".."
-          if (appointment[..-11] == date)
-            appointments[i] = appointment[..-5]
+        Dir.children(professional).each do |appointment|
+          appointment = File.basename appointment, '.paf'
+          dateAppointment = Date.strptime(appointment, '%Y-%m-%d')
+          if (dateAppointment.to_s == date)
+            appointments[i] = appointment
             i+=1
           end
         end
         return appointments
+      end
+
+      def self.from_file(date)
+        date = date.gsub ' ', '_'
+        appointment = new
+        File.open("#{date}.paf", 'r') do |line|
+          appointment.surname = line.readline.chomp
+          appointment.name = line.readline.chomp
+          appointment.phone = line.readline.chomp
+          if (not line.eof?)
+            appointment.notes = line.readline.chomp
+          end
+        end
+        appointment
+      end
+
+      def save(date)
+        date = date.gsub ' ', '_'
+        File.open("#{date}.paf", 'w') do |line|
+          line << "#{surname}\n"
+          line << "#{name}\n"
+          line << "#{phone}\n"
+          line << notes
+        end
+      end
+
+      def edit(options)
+        options.each do |key, value|
+          self.send(:"#{key}=", value)
+        end
       end
     end
   end

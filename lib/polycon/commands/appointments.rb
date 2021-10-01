@@ -1,6 +1,3 @@
-require 'polycon/utils.rb'
-require 'polycon/models/professional.rb'
-require 'polycon/models/appointment.rb'
 module Polycon
   module Commands
     module Appointments
@@ -122,11 +119,11 @@ module Polycon
           #warn "TODO: Implementar listado de turnos de la o el profesional '#{professional}'.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
           Polycon::Utils.ensure_polycon_exists
           if Polycon::Models::Professional.ensure_professional_exists(professional)
-            Dir.chdir("./#{professional}")
-            if (Polycon::Models::Appointment.appointments(date)).empty?
+            appointments = Polycon::Models::Appointment.appointments(date, professional)
+            if appointments.empty?
               warn "No hay turnos para esta fecha"
             else
-              (Polycon::Models::Appointment.appointments(date)).each do |appointment|
+              appointments.each do |appointment|
                 puts appointment
               end
             end
@@ -184,23 +181,15 @@ module Polycon
 
         def call(date:, professional:, **options)
           #warn "TODO: Implementar modificación de un turno de la o el profesional '#{professional}' con fecha '#{date}', para cambiarle la siguiente información: #{options}.\nPodés comenzar a hacerlo en #{__FILE__}:#{__LINE__}."
-          if File.exists?("#{ENV["HOME"]}/polycon")
-            Dir.chdir("#{ENV["HOME"]}/polycon/#{professional}")
-            date = date.gsub " ", "_"
-            #options.each_value{|option| puts option}
-            options.each do |key, value|
-              linea = 1
-              archivo = File.open("#{date}.paf").write
-              archivo.each_line do line
-                if (linea == 1)
-                  puts "hola"
-                end
-                linea += 1
-              end
-            end
-            #File.open("#{date}.paf", "r+") {|file| file.write("hola")}
+          Polycon::Utils.ensure_polycon_exists
+          if Polycon::Models::Professional.ensure_professional_exists(professional)
+            Dir.chdir("./#{professional}")
+            appointment = Polycon::Models::Appointment.from_file(date)
+            appointment.edit(options)
+            appointment.save(date)
+            puts appointment.name
           else
-            warn "No existe el directorio polycon"
+            warn "No existe el profesional"
           end
         end
       end
