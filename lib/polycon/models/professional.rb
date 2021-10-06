@@ -29,6 +29,14 @@ module Polycon
         end
         return professionals
       end
+
+      def self.professional_delete(name)
+        FileUtils.rm_rf(name)
+      end
+
+      def self.professional_rename(old_name, new_name)
+        File.rename(old_name, new_name)
+      end
     end
   end
 end

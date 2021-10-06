@@ -8,5 +8,9 @@ module Polycon
       end
       Dir.chdir("polycon")
     end
+
+    def self.access_professional_directory(professional)
+      Dir.chdir("./#{professional}")
+    end
   end
 end

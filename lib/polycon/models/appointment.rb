@@ -37,10 +37,18 @@ module Polycon
       def self.appointments(date, professional)
         i=0
         appointments = []
-        Dir.children(professional).each do |appointment|
-          appointment = File.basename appointment, '.paf'
-          dateAppointment = Date.strptime(appointment, '%Y-%m-%d')
-          if (dateAppointment.to_s == date)
+        if(not date.nil?)
+          Dir.children(professional).each do |appointment|
+            appointment = File.basename appointment, '.paf'
+            dateAppointment = Date.strptime(appointment, '%Y-%m-%d')
+            if (dateAppointment.to_s == date)
+              appointments[i] = appointment
+              i+=1
+            end
+          end
+        else
+          Dir.children(professional).each do |appointment|
+            appointment = File.basename appointment, '.paf'
             appointments[i] = appointment
             i+=1
           end
