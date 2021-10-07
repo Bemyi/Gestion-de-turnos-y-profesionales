@@ -85,6 +85,24 @@ module Polycon
           self.send(:"#{key}=", value)
         end
       end
+
+      def self.valid_date_time?(date)
+        begin
+          DateTime.strptime(date, "%Y-%m-%d %H-%M")
+          true
+        rescue ArgumentError
+        false
+        end
+      end
+
+      def self.valid_date?(date)
+        begin
+          Date.strptime(date, "%Y-%m-%d")
+          true
+        rescue ArgumentError
+        false
+        end
+      end
     end
   end
 end
