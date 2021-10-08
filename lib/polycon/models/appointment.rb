@@ -4,34 +4,40 @@ module Polycon
     class Appointment
       attr_accessor :name, :surname, :phone, :notes
       def self.create_appointment(date, name, surname, phone, notes)
-        date = date.gsub " ", "_"
+        date = (date.gsub " ", "_").gsub ":", "-"
         File.open("#{date}.paf", "w") {|file| file.write("#{surname}\n#{name}\n#{phone}\n#{notes}")}
       end
 
       def self.date_format(date)
-        date = "#{date.gsub " ", "_"}.paf"
+        date = "#{(date.gsub " ", "_").gsub ":", "-"}"
       end
 
       def self.ensure_appointment_exists(date)
-        File.file?(date)
+        File.file?("#{date}.paf")
       end
 
       def self.reschedule_appointment(old_date, new_date)
-        File.rename(old_date, new_date)
+        File.rename("#{old_date}.paf", "#{new_date}.paf")
       end
 
       def self.show_appointment(date)
+
         File.readlines(date).each do |line|
           puts line
         end
       end
 
       def self.cancel_appointment(date)
-        File.delete(date)
+        File.delete("#{date}.paf")
       end
 
-      def self.cancel_all_appointments
-        FileUtils.rm_rf(Dir.glob('./*'))
+      def self.cancel_all_appointments(professional)
+        hoy = Time.now.strftime("%Y-%m-%d_%H-%M")
+        Dir.children(professional).each do |appointment|
+          if appointment > hoy
+            File.delete("./#{professional}/#{appointment}")
+          end
+        end
       end
 
       def self.appointments(date, professional)
@@ -57,7 +63,7 @@ module Polycon
       end
 
       def self.from_file(date)
-        date = date.gsub ' ', '_'
+        date = (date.gsub ' ', '_').gsub ':', '-'
         appointment = new
         File.open("#{date}.paf", 'r') do |line|
           appointment.surname = line.readline.chomp
@@ -88,7 +94,7 @@ module Polycon
 
       def self.valid_date_time?(date)
         begin
-          DateTime.strptime(date, "%Y-%m-%d %H-%M")
+          DateTime.strptime(date, "%Y-%m-%d %H:%M")
           true
         rescue ArgumentError
         false
@@ -102,6 +108,11 @@ module Polycon
         rescue ArgumentError
         false
         end
+      end
+
+      def self.date_greater_than_today(old_date)
+        hoy = Time.now.strftime("%Y-%m-%d %H:%M")
+        old_date > hoy
       end
     end
   end

@@ -39,7 +39,7 @@ module Polycon
                 Polycon::Models::Professional.professional_delete(name)
                 warn "Profesional eliminado exitosamente"
               else
-                warn "Hay turnos pendientes"
+                warn "El profesional ingresado tiene turnos pendientes"
               end
             else
               warn "El profesional ingresado no existe"
@@ -78,11 +78,15 @@ module Polycon
 
         def call(old_name:, new_name:, **)
           Polycon::Utils.ensure_polycon_exists
-            if Polycon::Models::Professional.ensure_professional_exists(old_name)
-              Polycon::Models::Professional.professional_rename(old_name, new_name)
-              warn "El nombre se ha modificado exitosamente"
+            if not Polycon::Models::Professional.ensure_professional_exists(new_name)
+              if Polycon::Models::Professional.ensure_professional_exists(old_name)
+                Polycon::Models::Professional.professional_rename(old_name, new_name)
+                warn "El nombre se ha modificado exitosamente"
+              else
+                warn "El profesional ingresado no existe"
+              end
             else
-              warn "El profesional ingresado no existe"
+              warn "El nombre del profesional nuevo ya existe"
             end
         end
       end

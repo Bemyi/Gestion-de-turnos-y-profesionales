@@ -10,13 +10,12 @@ module Polycon
       end
 
       def self.have_appointments?(name)
-        encontroTurno = false
         Dir.foreach("./#{name}") do |turno|
           if (turno > Time.now.strftime("%Y-%m-%d_%H-%M"))
-            encontroTurno = true
-            return encontroTurno
+            return true
           end
         end
+        return false
       end
 
       def self.professional_names
