@@ -174,7 +174,7 @@ module Polycon
 
         def call(old_date:, new_date:, professional:)
           if Polycon::Models::Appointment.valid_date_time?(old_date) && Polycon::Models::Appointment.valid_date_time?(new_date)
-            if (Polycon::Models::Appointment.date_greater_than_today(old_date))
+            if (Polycon::Models::Appointment.date_greater_than_today(old_date) && Polycon::Models::Appointment.date_greater_than_today(new_date))
               Polycon::Utils.ensure_polycon_exists
               if Polycon::Models::Professional.ensure_professional_exists(professional)
                 Polycon::Utils::access_professional_directory(professional)
