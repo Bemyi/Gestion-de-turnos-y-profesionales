@@ -11,7 +11,7 @@ module Polycon
 
       def self.have_appointments?(name)
         Dir.foreach("./#{name}") do |turno|
-          if (turno > Time.now.strftime("%Y-%m-%d_%H-%M"))
+          if (turno > Time.now.strftime("%Y-%m-%d %H:%M"))
             return true
           end
         end

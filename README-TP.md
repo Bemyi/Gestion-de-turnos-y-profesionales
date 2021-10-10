@@ -64,4 +64,4 @@ Solo se pueden reprogramar appointments con fecha mayor a la fecha y hora actual
 
 ### Editar un appointment
 
-Para editarlo, utilizo un método from_file(date), el cual devuelve un objeto appointment, el cual tiene un método para editarlo y otro para guardarlo en el archivo.
+Para editarlo, utilizo un método from_file(date), devuelve un objeto appointment, el cual tiene un método para editarlo y otro para guardarlo en el archivo. Se puede editar información de turnos que ya fueron atendidos.
