@@ -2,7 +2,7 @@ module Polycon
   module Commands
     module Presentation
       class AppointmentsInDay < Dry::CLI::Command
-        desc 'Create a professional'
+        desc 'Generates a grid with all the appointments of a day'
 
         argument :date, required: true, desc: 'An appointment date'
         option :professional, required: false, desc: 'Name of a professional'
@@ -13,7 +13,8 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
-          warn('day')
+          Polycon::Utils.ensure_polycon_exists
+          Polycon::Presentation.appointments_in_day(date, professional)
         end
       end
 

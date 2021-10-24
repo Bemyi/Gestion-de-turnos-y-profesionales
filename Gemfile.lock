@@ -1,7 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    cgi (0.3.0)
     dry-cli (0.7.0)
+    erb (2.2.3)
+      cgi
+    rack (2.2.3)
+    thamble (1.1.0)
+      rack
 
 PLATFORMS
   x86_64-darwin-20
@@ -9,6 +15,8 @@ PLATFORMS
 
 DEPENDENCIES
   dry-cli (~> 0.7)
+  erb
+  thamble
 
 RUBY VERSION
    ruby 2.7.4p191
