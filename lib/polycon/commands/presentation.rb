@@ -19,7 +19,7 @@ module Polycon
       end
 
       class AppointmentsInWeek < Dry::CLI::Command
-        desc 'Delete a professional (only if they have no appointments)'
+        desc 'Generates a grid with all the appointments of a week'
 
         argument :date, required: true, desc: 'An appointment date'
         option :professional, required: false, desc: 'Name of a professional'
@@ -30,7 +30,7 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
-          warn('week')
+          Polycon::Presentation.appointments_in_week(date, professional)
         end
       end
     end

@@ -2,7 +2,7 @@ require 'date'
 module Polycon
   module Models
     class Appointment
-      attr_accessor :name, :surname, :phone, :notes, :date, :hour
+      attr_accessor :name, :surname, :phone, :notes, :date, :hour, :professional
       def self.create_appointment(date, name, surname, phone, notes)
         date = (date.gsub " ", "_").gsub ":", "-"
         File.open("#{date}.paf", "w") {|file| file.write("#{surname}\n#{name}\n#{phone}\n#{notes}")}
@@ -48,20 +48,17 @@ module Polycon
         appointments
       end
 
-      def self.appointments_in_day(date)
-        appointments = []
-        Polycon::Utils.appointments_in_day(date).map do |entry|
-          appointments << self.from_file(entry)
-        end
-        appointments
+      def self.appointments_in_day(date, professional)
+        Polycon::Utils.appointments_in_day(date, professional)
       end
 
-      def self.from_file(date)
+      def self.from_file(professional, date)
         date = (date.gsub ' ', '_').gsub ':', '-'
         appointment = new
         File.open("#{date}.paf", 'r') do |line|
-          appointment.date = date[..-7]
-          appointment.hour = date[11..]
+          appointment.professional = professional
+          appointment.date = Date.strptime((date[..-7]), "%Y-%m-%d")
+          appointment.hour = date[11..].gsub '-', ':'
           appointment.surname = line.readline.chomp
           appointment.name = line.readline.chomp
           appointment.phone = line.readline.chomp
