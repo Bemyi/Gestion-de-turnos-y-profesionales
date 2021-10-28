@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title><%= title %></title>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <table class="table table-bordered table-dark">
+      <thead>
+        <tr>
+        <th scope="col">hora/dia</th>
+        <% dates.each do |date| %>
+          <th scope="col"><%= date %></th>
+        <% end %>
+        </tr>
+      </thead>
+      <tbody>
+      <% horas.each do |hora| %>
+        
+        <tr>
+          <th scope="row"><%= hora %></th>
+          <% dates.each do |date| %>
+            <td>
+              <% appointments.each do |appo| %>
+                <% if appo.hour == hora && appo.date == date %>
+                  Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %> 
+                  <br>
+                <% end %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      
+      <% end %>
+    </table>
+  </body>
+</html>

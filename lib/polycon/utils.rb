@@ -39,36 +39,12 @@ module Polycon
       return appointments
     end
 
-    def self.appointments_in_day(date, professional)
-      appointments = []
-      if (not professional.nil?)
-        self.access_professional_directory(professional)
-        Dir.foreach(".") do |appointment|
-          next if appointment == '.' || appointment == '..'
-          appointment_aux = self.remove_paf(appointment)
-          if (Date.strptime(appointment_aux, '%Y-%m-%d') == date)
-            appointments << Polycon::Models::Appointment.from_file(professional, (File.basename appointment, '.paf'))
-          end   
-        end
-      else
-        Dir.glob("**/*.paf") do |appointment|
-          appointment_aux = self.remove_paf(appointment)
-          if (Date.strptime(appointment_aux, '%Y-%m-%d') == date)
-            self.access_professional_directory(appointment[..-22])
-            appointments << Polycon::Models::Appointment.from_file(appointment[..-22], (File.basename appointment, '.paf'))
-          end
-        end
-      end
-      return appointments
-    end
-
     def self.remove_paf(file)
       File.basename file, '.paf'
     end
 
     def self.save_template(template, date, title, appointments, horas, dates=nil)
-      Polycon::Utils.ensure_polycon_exists
-      File.open("Appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
+      File.open("#{Dir.pwd}/appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
     end
 
     def self.ensure_professional_exists(professional)
@@ -94,7 +70,7 @@ module Polycon
 
     def self.from_file(appointment, professional, date)
       File.open(root_path + "/#{professional.name}/#{date}.paf", 'r') do |line|
-        appointment.professional = professional.name
+        appointment.professional = professional
         appointment.date = Date.strptime((date[..-7]), "%Y-%m-%d")
         appointment.hour = date[11..].gsub '-', ':'
         appointment.surname = line.readline.chomp

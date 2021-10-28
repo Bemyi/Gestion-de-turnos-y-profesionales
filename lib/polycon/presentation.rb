@@ -6,9 +6,7 @@ module Polycon
     def self.appointments_in_day(date, professional)
       date = Date.strptime(date, "%Y-%m-%d")
       title = "appointments_of_day_#{date}"
-      #appointments = Polycon::Models::Appointment.appointments_in_day(date, professional)
       appointments = []
-      puts professional
       if professional.nil?
         Polycon::Models::Professional.professional_names.map do |prof|
           appointments += prof.appointments()
@@ -16,49 +14,12 @@ module Polycon
       else
         appointments += professional.appointments()
       end
-      appointments.each do |a|
-        puts a.professional
-      end
       appointments.select! do |appointment|
         appointment.date.to_s > Time.now.strftime("%Y-%m-%d") && appointment.date == date
       end
-
       horas = self.horas_template()
 
-      template = ERB.new <<~END, nil, '-'
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-          <title><%= title %></title>
-          <meta charset="UTF-8">
-        </head>
-        <body>
-          <table class="table table-bordered table-dark">
-            <thead>
-              <tr>
-              <th scope="col">hora/dia</th>
-                <th scope="col"><%= date %></th>
-              </tr>
-            </thead>
-            <tbody>
-            <%- horas.each do |hora| -%>
-              <tr>
-                <th scope="row"><%= hora %></th>
-                <td>
-                <%- appointments.each do |appo| -%>
-                  <% if appo.hour == hora %>
-                    <%= appo.name %> (<%= appo.professional %>)
-                    <br>
-                  <% end %>
-                <%- end -%>
-                <td>
-              </tr>
-            <%- end -%>
-          </table>
-        </body>
-      </html>
-      END
+      template = ERB.new(File.read("lib/polycon/templates/appointments_in_day.html.erb"))
       Polycon::Utils.save_template(template, date, title, appointments, horas)
     end
 
@@ -70,51 +31,10 @@ module Polycon
       dateTitle = date
       title = "appointments_of_week_#{dateTitle}"
       appointments = self.appointments_week_template(date, professional)
-      
-
       horas = self.horas_template()
       dates = self.dates_template(date)
 
-      template = ERB.new <<~END, nil, '-'
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-          <title><%= title %></title>
-          <meta charset="UTF-8">
-        </head>
-        <body>
-          <table class="table table-bordered table-dark">
-            <thead>
-              <tr>
-              <th scope="col">hora/dia</th>
-              <%- dates.each do |date| -%>
-                <th scope="col"><%= date %></th>
-              <%- end -%>
-              </tr>
-            </thead>
-            <tbody>
-            <%- horas.each do |hora| -%>
-              
-              <tr>
-                <th scope="row"><%= hora %></th>
-                <%- dates.each do |date| -%>
-                  <td>
-                    <%- appointments.each do |appo| -%>
-                      <% if appo.hour == hora && appo.date == date %>
-                        Profesional: <%= appo.professional %> - Paciente: <%= appo.name %> 
-                        <br>
-                      <% end %>
-                    <%- end -%>
-                  </td>
-                <%- end -%>
-              </tr>
-            
-            <%- end -%>
-          </table>
-        </body>
-      </html>
-      END
+      template = ERB.new(File.read("lib/polycon/templates/appointments_in_week.html.erb"))
       Polycon::Utils.save_template(template, date, title, appointments, horas, dates)
     end
 
