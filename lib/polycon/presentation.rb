@@ -8,6 +8,7 @@ module Polycon
       title = "appointments_of_day_#{date}"
       #appointments = Polycon::Models::Appointment.appointments_in_day(date, professional)
       appointments = []
+      puts professional
       if professional.nil?
         Polycon::Models::Professional.professional_names.map do |prof|
           appointments += prof.appointments()
@@ -15,8 +16,11 @@ module Polycon
       else
         appointments += professional.appointments()
       end
+      appointments.each do |a|
+        puts a.professional
+      end
       appointments.select! do |appointment|
-        appointment.date.to_s > Time.now.strftime("%Y-%m-%d")
+        appointment.date.to_s > Time.now.strftime("%Y-%m-%d") && appointment.date == date
       end
 
       horas = self.horas_template()
@@ -66,6 +70,8 @@ module Polycon
       dateTitle = date
       title = "appointments_of_week_#{dateTitle}"
       appointments = self.appointments_week_template(date, professional)
+      
+
       horas = self.horas_template()
       dates = self.dates_template(date)
 
@@ -113,23 +119,28 @@ module Polycon
     end
 
     def self.appointments_week_template(date, professional)
+      appointmentsAux = []
       appointments = []
       if professional.nil?
         for i in 1..7 do
           Polycon::Models::Professional.professional_names.map do |prof|
-            appointments += prof.appointments()
+            appointmentsAux += prof.appointments()
+          end
+          appointments += appointmentsAux.select! do |appointment|
+            appointment.date.to_s > Time.now.strftime("%Y-%m-%d") && appointment.date == date
           end
           date = date.next_day
         end
       else
         for i in 1..7 do
-          appointments += prof.appointments()
+          appointmentsAux += professional.appointments()
+          appointments += appointmentsAux.select! do |appointment|
+            appointment.date.to_s > Time.now.strftime("%Y-%m-%d") && appointment.date == date
+          end
           date = date.next_day
         end
       end
-      appointments.select do |appointment|
-        appointment.date.to_s > Time.now.strftime("%Y-%m-%d")
-      end
+      appointments
     end
 
     def self.dates_template(date)

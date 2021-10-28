@@ -104,6 +104,7 @@ module Polycon
           appointment.notes = line.readline.chomp
         end
       end
+      appointment
     end
 
     def self.rename_professional(professional, new_name)

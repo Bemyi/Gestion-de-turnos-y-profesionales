@@ -100,6 +100,16 @@ module Polycon
         hoy = Time.now.strftime("%Y-%m-%d %H:%M")
         old_date > hoy
       end
+
+      def self.find_appointment(date)
+        appointment = new
+        appointment.
+        return professional if professional.exists?
+      end
+
+      def exists?
+        Utils.ensure_professional_exists(self)
+      end
     end
   end
 end

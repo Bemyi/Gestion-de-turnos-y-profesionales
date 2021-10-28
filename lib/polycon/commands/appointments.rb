@@ -25,19 +25,18 @@ module Polycon
                 return 1
               else
                 date = Polycon::Models::Appointment.date_format(date)
-                appointment = Polycon::Models::Professional.find_professional(name)
+                appointment = Polycon::Models::Appointment.find_appointment(date)
                 if !professional.nil?
                   warn "Ya existe una fecha para ese dia y hora"
                   return 1
                 else
-                if !Polycon::Models::Appointment.ensure_appointment_exists(date)
-                  Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes)
-                  warn "Turno creado exitosamente"
-                else
-                  warn "Ya existe una fecha para ese dia y hora"
+                  if !Polycon::Models::Appointment.ensure_appointment_exists(date)
+                    Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes)
+                    warn "Turno creado exitosamente"
+                  else
+                    warn "Ya existe una fecha para ese dia y hora"
+                  end
                 end
-              else
-                warn "El profesional ingresado no existe"
               end
             else
               warn "La fecha ingresada debe ser mayor a la fecha de hoy"

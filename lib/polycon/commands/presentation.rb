@@ -13,9 +13,14 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
-          
-          Polycon::Utils.ensure_polycon_exists
-          Polycon::Presentation.appointments_in_day(date, professional)
+          if !professional.nil?
+            prof = Polycon::Models::Professional.find_professional(professional)
+            if prof.nil?
+              warn "El profesional ingresado no existe"
+              return 1
+            end
+          end
+          Polycon::Presentation.appointments_in_day(date, prof)
         end
       end
 
@@ -31,7 +36,14 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
-          Polycon::Presentation.appointments_in_week(date, professional)
+          if !professional.nil?
+            prof = Polycon::Models::Professional.find_professional(professional)
+            if prof.nil?
+              warn "El profesional ingresado no existe"
+              return 1
+            end
+          end
+          Polycon::Presentation.appointments_in_week(date, prof)
         end
       end
     end
