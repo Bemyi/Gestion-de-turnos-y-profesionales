@@ -13,10 +13,12 @@ module Polycon
 
         def call(name:, **)
           Polycon::Utils.ensure_polycon_exists
-          if Polycon::Models::Professional.ensure_professional_exists(name)
+          professional = Polycon::Models::Professional.find_professional(name)
+          if !professional.nil?
             warn "El profesional ya existe"
+            return 1
           else
-            Polycon::Models::Professional.create_directory_professional(name)
+            Polycon::Models::Professional.create_professional(name)
             warn "Se ha creado el profesional exitosamente"
           end
         end
@@ -34,16 +36,19 @@ module Polycon
 
         def call(name: nil)
           Polycon::Utils.ensure_polycon_exists
-            if Polycon::Models::Professional.ensure_professional_exists(name)
-              if not (Polycon::Models::Professional.have_appointments?(name))
-                Polycon::Models::Professional.professional_delete(name)
-                warn "Profesional eliminado exitosamente"
-              else
-                warn "El profesional ingresado tiene turnos pendientes"
-              end
+          professional = Polycon::Models::Professional.find_professional(name)
+          if professional.nil?
+            warn "El profesional ingresado no existe"
+            return 1
+          else
+            if !(professional.has_appointments?(name))
+              Polycon::Utils.ensure_polycon_exists
+              Polycon::Models::Professional.professional_delete(name)
+              warn "Profesional eliminado exitosamente"
             else
-              warn "El profesional ingresado no existe"
+              warn "El profesional ingresado tiene turnos pendientes"
             end
+          end
         end
       end
 
@@ -60,7 +65,7 @@ module Polycon
             warn "No hay profesionales"
           else
             (Polycon::Models::Professional.professional_names).each do |professional|
-              puts professional
+              puts professional.name
             end
           end
         end
@@ -78,16 +83,20 @@ module Polycon
 
         def call(old_name:, new_name:, **)
           Polycon::Utils.ensure_polycon_exists
-            if not Polycon::Models::Professional.ensure_professional_exists(new_name)
-              if Polycon::Models::Professional.ensure_professional_exists(old_name)
-                Polycon::Models::Professional.professional_rename(old_name, new_name)
-                warn "El nombre se ha modificado exitosamente"
-              else
-                warn "El profesional ingresado no existe"
-              end
+          professional = Polycon::Models::Professional.find_professional(new_name)
+          if !professional.nil?
+            warn "El nombre del profesional nuevo ya existe"
+            return 1
+          else
+            professional = Polycon::Models::Professional.find_professional(old_name)
+            if professional.nil?
+              warn "El profesional ingresado no existe"
+              return 1
             else
-              warn "El nombre del profesional nuevo ya existe"
+              Polycon::Models::Professional.professional_rename(old_name, new_name)
+              warn "El nombre se ha modificado exitosamente"
             end
+          end
         end
       end
     end

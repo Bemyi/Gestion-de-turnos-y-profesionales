@@ -13,7 +13,7 @@ module Polycon
       Dir.chdir("#{professional}")
     end
 
-    def self.appointments(date, professional)
+    def self.appointments(professional, date=nil)
       i=0
       appointments = []
       self.access_professional_directory(professional)
@@ -29,6 +29,7 @@ module Polycon
         end
       else
         Dir.foreach(".") do |appointment|
+          next if appointment == '.' || appointment == '..'
           appointment = File.basename appointment, '.paf'
           appointments[i] = appointment
           i+=1
@@ -69,5 +70,27 @@ module Polycon
       File.open("Appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
     end
 
+    def self.ensure_professional_exists(name)
+      File.exists?(name)
+    end
+
+    def self.create_directory_professional(name)
+      Dir.mkdir(name)
+    end
+
+    def self.professional_delete(name)
+      FileUtils.rm_rf(name)
+    end
+
+    def self.professional_names
+      i=0
+        professionals = []
+        Dir.foreach(".") do |professional|
+          next if professional == "." or professional == ".."         
+          professionals[i] = professional
+          i+=1
+        end
+        professionals
+    end
   end
 end

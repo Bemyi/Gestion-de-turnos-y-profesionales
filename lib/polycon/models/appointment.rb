@@ -62,7 +62,7 @@ module Polycon
           appointment.surname = line.readline.chomp
           appointment.name = line.readline.chomp
           appointment.phone = line.readline.chomp
-          if (not line.eof?)
+          if (!line.eof?)
             appointment.notes = line.readline.chomp
           end
         end

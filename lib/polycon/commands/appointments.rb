@@ -22,7 +22,7 @@ module Polycon
               if Polycon::Models::Professional.ensure_professional_exists(professional)
                 Polycon::Utils.access_professional_directory(professional)
                 date = Polycon::Models::Appointment.date_format(date)
-                if not Polycon::Models::Appointment.ensure_appointment_exists(date)
+                if !Polycon::Models::Appointment.ensure_appointment_exists(date)
                   Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes)
                   warn "Turno creado exitosamente"
                 else
