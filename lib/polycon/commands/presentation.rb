@@ -13,6 +13,7 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
+          
           Polycon::Utils.ensure_polycon_exists
           Polycon::Presentation.appointments_in_day(date, professional)
         end

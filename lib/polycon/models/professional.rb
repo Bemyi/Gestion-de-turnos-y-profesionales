@@ -11,16 +11,16 @@ module Polycon
 
       def self.create_professional(name)
         professional = new(name)
-        Polycon::Utils.create_directory_professional(name)
+        Polycon::Utils.save_professional(professional)
       end
 
       def appointments
-        Polycon::Utils.appointments(name).map do |date|
-          Polycon::Models::Appointment.from_file(name, date)
+        Polycon::Utils.appointments(self).map do |date|
+          Polycon::Models::Appointment.from_file(self, date)
         end
       end
 
-      def has_appointments?(name)
+      def has_appointments?
         !appointments.select do |appointment|
           appointment.date.to_s > Time.now.strftime("%Y-%m-%d")
         end.empty?
@@ -32,7 +32,7 @@ module Polycon
       end
 
       def exists?
-        Utils.ensure_professional_exists(self.name)
+        Utils.ensure_professional_exists(self)
       end
 
       def self.professional_names
@@ -43,12 +43,18 @@ module Polycon
         professionals
       end
 
-      def self.professional_delete(name)
-        Polycon::Utils.professional_delete(name)
+      def delete()
+        if !has_appointments?
+          Polycon::Utils.professional_delete(self)
+          true
+        else
+          false
+        end
       end
 
-      def self.professional_rename(old_name, new_name)
-        File.rename(old_name, new_name)
+      def rename(new_name)
+        Polycon::Utils.rename_professional(self, new_name)
+        self.name = new_name
       end
     end
   end

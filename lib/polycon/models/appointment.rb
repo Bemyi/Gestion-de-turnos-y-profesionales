@@ -41,9 +41,12 @@ module Polycon
       end
 
       def self.appointments(date, professional)
+        puts date
+        puts professional
         appointments = []
-        Polycon::Utils.appointments(date, professional).map do |entry|
-          appointments << self.from_file(entry)
+        Polycon::Utils.appointments(professional, date).map do |entry|
+          puts entry
+          appointments << self.from_file(professional, entry)
         end
         appointments
       end
@@ -55,17 +58,7 @@ module Polycon
       def self.from_file(professional, date)
         date = (date.gsub ' ', '_').gsub ':', '-'
         appointment = new
-        File.open("#{date}.paf", 'r') do |line|
-          appointment.professional = professional
-          appointment.date = Date.strptime((date[..-7]), "%Y-%m-%d")
-          appointment.hour = date[11..].gsub '-', ':'
-          appointment.surname = line.readline.chomp
-          appointment.name = line.readline.chomp
-          appointment.phone = line.readline.chomp
-          if (!line.eof?)
-            appointment.notes = line.readline.chomp
-          end
-        end
+        Polycon::Utils.from_file(appointment, professional, date)
         appointment
       end
 

@@ -8,31 +8,32 @@ module Polycon
       Dir.chdir(".polycon")
     end
 
+    def self.root_path
+      root_path = Dir.home + "/.polycon"
+      FileUtils.mkdir_p root_path
+      root_path
+    end
+
     def self.access_professional_directory(professional)
-      self.ensure_polycon_exists
-      Dir.chdir("#{professional}")
+      FileUtils.mkdir_p root_path + "#{professional.name}"
     end
 
     def self.appointments(professional, date=nil)
-      i=0
       appointments = []
-      self.access_professional_directory(professional)
       if(not date.nil?)
-        Dir.foreach(".") do |appointment|
+        Dir.foreach(root_path + "/#{professional.name}") do |appointment|
           next if appointment == '.' || appointment == '..'
-          appointment = File.basename appointment, '.paf'
+          appointment = self.remove_paf(appointment)
           dateAppointment = Date.strptime(appointment, '%Y-%m-%d')
-          if (dateAppointment.to_s == date)
-            appointments[i] = appointment
-            i+=1
+          if (dateAppointment.to_s == date.to_s)
+            appointments << appointment
           end
         end
       else
-        Dir.foreach(".") do |appointment|
+        Dir.foreach(root_path + "/#{professional.name}") do |appointment|
           next if appointment == '.' || appointment == '..'
-          appointment = File.basename appointment, '.paf'
-          appointments[i] = appointment
-          i+=1
+          appointment = self.remove_paf(appointment)
+          appointments << appointment
         end
       end
       return appointments
@@ -70,27 +71,43 @@ module Polycon
       File.open("Appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
     end
 
-    def self.ensure_professional_exists(name)
-      File.exists?(name)
+    def self.ensure_professional_exists(professional)
+      File.exists?root_path + "/#{professional.name}"
     end
 
-    def self.create_directory_professional(name)
-      Dir.mkdir(name)
+    def self.save_professional(professional)
+      FileUtils.mkdir_p root_path + "/#{professional.name}"
     end
 
-    def self.professional_delete(name)
-      FileUtils.rm_rf(name)
+    def self.professional_delete(professional)
+      FileUtils.rm_rf root_path + "/#{professional.name}"
     end
 
     def self.professional_names
-      i=0
-        professionals = []
-        Dir.foreach(".") do |professional|
-          next if professional == "." or professional == ".."         
-          professionals[i] = professional
-          i+=1
+      professionals = []
+      Dir.foreach(root_path) do |professional|
+        next if professional == "." or professional == ".."         
+        professionals << professional
+      end
+      professionals
+    end
+
+    def self.from_file(appointment, professional, date)
+      File.open(root_path + "/#{professional.name}/#{date}.paf", 'r') do |line|
+        appointment.professional = professional.name
+        appointment.date = Date.strptime((date[..-7]), "%Y-%m-%d")
+        appointment.hour = date[11..].gsub '-', ':'
+        appointment.surname = line.readline.chomp
+        appointment.name = line.readline.chomp
+        appointment.phone = line.readline.chomp
+        if (!line.eof?)
+          appointment.notes = line.readline.chomp
         end
-        professionals
+      end
+    end
+
+    def self.rename_professional(professional, new_name)
+      File.rename(root_path + "/#{professional.name}", new_name)
     end
   end
 end

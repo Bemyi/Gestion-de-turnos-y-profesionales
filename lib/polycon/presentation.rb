@@ -6,8 +6,21 @@ module Polycon
     def self.appointments_in_day(date, professional)
       date = Date.strptime(date, "%Y-%m-%d")
       title = "appointments_of_day_#{date}"
-      appointments = Polycon::Models::Appointment.appointments_in_day(date, professional)
+      #appointments = Polycon::Models::Appointment.appointments_in_day(date, professional)
+      appointments = []
+      if professional.nil?
+        Polycon::Models::Professional.professional_names.map do |prof|
+          appointments += prof.appointments()
+        end
+      else
+        appointments += professional.appointments()
+      end
+      appointments.select! do |appointment|
+        appointment.date.to_s > Time.now.strftime("%Y-%m-%d")
+      end
+
       horas = self.horas_template()
+
       template = ERB.new <<~END, nil, '-'
       <!DOCTYPE html>
       <html lang="en">
@@ -101,12 +114,22 @@ module Polycon
 
     def self.appointments_week_template(date, professional)
       appointments = []
-      for i in 1..7 do
-        Polycon::Utils.ensure_polycon_exists
-        appointments.push(*Polycon::Models::Appointment.appointments_in_day(date, professional))
-        date = date.next_day
+      if professional.nil?
+        for i in 1..7 do
+          Polycon::Models::Professional.professional_names.map do |prof|
+            appointments += prof.appointments()
+          end
+          date = date.next_day
+        end
+      else
+        for i in 1..7 do
+          appointments += prof.appointments()
+          date = date.next_day
+        end
       end
-      appointments
+      appointments.select do |appointment|
+        appointment.date.to_s > Time.now.strftime("%Y-%m-%d")
+      end
     end
 
     def self.dates_template(date)
