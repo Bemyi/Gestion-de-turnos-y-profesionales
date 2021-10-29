@@ -17,29 +17,28 @@ module Polycon
 
         def call(date:, professional:, name:, surname:, phone:, notes: nil)
           if Polycon::Models::Appointment.valid_date_time?(date)
-            if (Polycon::Models::Appointment.date_greater_than_today(date))
-              Polycon::Utils.ensure_polycon_exists
-              professional = Polycon::Models::Professional.find_professional(name)
-              if professional.nil?
-                warn "El profesional ingresado no existe"
-                return 1
-              else
-                date = Polycon::Models::Appointment.date_format(date)
-                appointment = Polycon::Models::Appointment.find_appointment(date)
-                if !professional.nil?
-                  warn "Ya existe una fecha para ese dia y hora"
+            if !Polycon::Models::Appointment.valid_date_for_appointment?(date)
+              warn "Los horarios de los turnos son cada media hora"
+              return 1
+            else
+              if (Polycon::Models::Appointment.date_greater_than_today(date))
+                prof = Polycon::Models::Professional.find_professional(professional)
+                if prof.nil?
+                  warn "El profesional ingresado no existe"
                   return 1
                 else
-                  if !Polycon::Models::Appointment.ensure_appointment_exists(date)
-                    Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes)
-                    warn "Turno creado exitosamente"
+                  appointment = prof.find_appointment(date)
+                  if !appointment.nil?
+                    warn "Ya existe un turno para esa fecha"
+                    return 1
                   else
-                    warn "Ya existe una fecha para ese dia y hora"
+                    Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes, prof)
+                    warn "Turno creado exitosamente"
                   end
                 end
+              else
+                warn "La fecha ingresada debe ser mayor a la fecha de hoy"
               end
-            else
-              warn "La fecha ingresada debe ser mayor a la fecha de hoy"
             end
           else
             warn "Debe ingresar una fecha y hora válida"
@@ -59,21 +58,21 @@ module Polycon
 
         def call(date:, professional:)
           if Polycon::Models::Appointment.valid_date_time?(date)
-            Polycon::Utils.ensure_polycon_exists
-            if Polycon::Models::Professional.ensure_professional_exists(professional)
-              Polycon::Utils::access_professional_directory(professional)
-              date = Polycon::Models::Appointment.date_format(date)
-              if (Polycon::Models::Appointment.ensure_appointment_exists(date))
-                appointment = Polycon::Models::Appointment.from_file(date)
-                puts appointment.name
-                puts appointment.surname
-                puts appointment.phone
-                puts appointment.notes unless appointment.notes.nil?
-              else
-                warn "No existe turno con esa fecha y hora"
-              end
+            prof = Polycon::Models::Professional.find_professional(professional)
+            if prof.nil?
+              warn "El profesional ingresado no existe"
+              return 1
             else
-              warn "No existe el profesional"
+              appointment = prof.find_appointment(date)
+              if appointment.nil?
+                warn "No existe un turno para esa fecha"
+                return 1
+              else
+                puts "Nombre: #{appointment.name}"
+                puts "Apellido: #{appointment.surname}"
+                puts "Telefono: #{appointment.phone}"
+                puts "Notas: #{appointment.notes}" unless appointment.notes.nil?
+              end
             end
           else
             warn "Debe ingresar una fecha y hora válida"
@@ -94,18 +93,19 @@ module Polycon
         def call(date:, professional:)
           if Polycon::Models::Appointment.valid_date_time?(date)
             if (Polycon::Models::Appointment.date_greater_than_today(date))
-              Polycon::Utils.ensure_polycon_exists
-              if Polycon::Models::Professional.ensure_professional_exists(professional)
-                Polycon::Utils::access_professional_directory(professional)
-                date = Polycon::Models::Appointment.date_format(date)
-                if (Polycon::Models::Appointment.ensure_appointment_exists(date))
-                  Polycon::Models::Appointment.cancel_appointment(date)
-                  warn "Turno cancelado exitosamente"
-                else
-                  warn "No existe turno con esa fecha y hora"
-                end
+              prof = Polycon::Models::Professional.find_professional(professional)
+              if prof.nil?
+                warn "El profesional ingresado no existe"
+                return 1
               else
-                warn "No existe el profesional"
+                appointment = prof.find_appointment(date)
+                if appointment.nil?
+                  warn "No existe un turno para esa fecha"
+                  return 1
+                else
+                  appointment.cancel_appointment
+                  warn "Turno cancelado exitosamente"
+                end
               end
             else
               warn "La fecha ingresada debe ser mayor a la fecha de hoy"
@@ -126,12 +126,13 @@ module Polycon
         ]
 
         def call(professional:)
-          Polycon::Utils.ensure_polycon_exists
-          if Polycon::Models::Professional.ensure_professional_exists(professional)
-            Polycon::Models::Appointment.cancel_all_appointments(professional)
-            warn "Se han cancelado todos los turnos del profesional"
+          prof = Polycon::Models::Professional.find_professional(professional)
+          if prof.nil?
+            warn "El profesional ingresado no existe"
+            return 1
           else
-            warn "No existe el profesional"
+            prof.cancel_all_appointments
+            warn "Se han cancelado todos los turnos del profesional posteriores a la fecha de hoy"
           end
         end
       end
@@ -149,18 +150,19 @@ module Polycon
 
         def call(professional:, date:nil)
           if date.nil? || Polycon::Models::Appointment.valid_date?(date)
-            Polycon::Utils.ensure_polycon_exists
-            if Polycon::Models::Professional.ensure_professional_exists(professional)
-              appointments = Polycon::Models::Appointment.appointments(date, professional)
+            prof = Polycon::Models::Professional.find_professional(professional)
+            if prof.nil?
+              warn "El profesional ingresado no existe"
+              return 1
+            else
+              appointments = prof.appointments(date)
               if appointments.empty?
                 warn "No hay turnos"
               else
                 appointments.each do |appointment|
-                  puts appointment
+                  puts "Dia: #{appointment.get_only_date} Hora: #{appointment.get_only_hour}"
                 end
               end
-            else
-              warn "No existe el profesional"
             end
           else
             warn "Debe ingresar una fecha válida"
@@ -181,23 +183,31 @@ module Polycon
 
         def call(old_date:, new_date:, professional:)
           if Polycon::Models::Appointment.valid_date_time?(old_date) && Polycon::Models::Appointment.valid_date_time?(new_date)
-            if (Polycon::Models::Appointment.date_greater_than_today(old_date) && Polycon::Models::Appointment.date_greater_than_today(new_date))
-              Polycon::Utils.ensure_polycon_exists
-              if Polycon::Models::Professional.ensure_professional_exists(professional)
-                Polycon::Utils::access_professional_directory(professional)
-                old_date = Polycon::Models::Appointment.date_format(old_date)
-                new_date = Polycon::Models::Appointment.date_format(new_date)
-                if Polycon::Models::Appointment.ensure_appointment_exists(old_date)
-                  Polycon::Models::Appointment.reschedule_appointment(old_date, new_date)
-                  warn "El turno se ha modificado exitosamente"
+            if !Polycon::Models::Appointment.valid_date_for_appointment?(new_date)
+              warn "Los horarios de los turnos son cada media hora"
+              return 1
+            else
+              if (Polycon::Models::Appointment.date_greater_than_today(old_date) && Polycon::Models::Appointment.date_greater_than_today(new_date))
+                prof = Polycon::Models::Professional.find_professional(professional)
+                if prof.nil?
+                  warn "El profesional ingresado no existe"
+                  return 1
                 else
-                  warn "No existe turno con esa fecha y hora"
+                  appointment = prof.find_appointment(old_date)
+                  if appointment.nil?
+                    warn "No existe un turno para esa fecha"
+                    return 1
+                  else
+                    if appointment.reschedule(new_date)
+                      warn "El turno se ha modificado exitosamente"
+                    else
+                      warn "Existe un turno en esa fecha nueva para ese profesional"
+                    end
+                  end
                 end
               else
-                warn "No existe el profesional"
+                warn "La fecha ingresada debe ser mayor a la fecha de hoy"
               end
-            else
-              warn "La fecha ingresada debe ser mayor a la fecha de hoy"
             end
           else
             warn "Debe ingresar una fecha y hora válida"
@@ -223,20 +233,20 @@ module Polycon
 
         def call(date:, professional:, **options)
           if Polycon::Models::Appointment.valid_date_time?(date)
-            Polycon::Utils.ensure_polycon_exists
-            if Polycon::Models::Professional.ensure_professional_exists(professional)
-              Polycon::Utils::access_professional_directory(professional)
-              date = Polycon::Models::Appointment.date_format(date)
-              if Polycon::Models::Appointment.ensure_appointment_exists(date)
-                appointment = Polycon::Models::Appointment.from_file(date)
+            prof = Polycon::Models::Professional.find_professional(professional)
+            if prof.nil?
+              warn "El profesional ingresado no existe"
+              return 1
+            else
+              appointment = prof.find_appointment(date)
+              if appointment.nil?
+                warn "No existe un turno para esa fecha"
+                return 1
+              else
                 appointment.edit(options)
                 appointment.save(date)
                 warn "Turno modificado exitosamente"
-              else
-                warn "No existe turno con esa fecha y hora"
               end
-            else
-              warn "No existe el profesional"
             end
           else
             warn "Debe ingresar una fecha y hora válida"

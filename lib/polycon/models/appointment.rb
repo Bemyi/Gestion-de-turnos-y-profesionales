@@ -4,25 +4,30 @@ module Polycon
     class Appointment
       attr_accessor :name, :surname, :phone, :notes, :date, :professional
 
-      def initialize(date)
+      def initialize(date=nil, professional=nil, name=nil, surname=nil, phone=nil, notes=nil)
         @date = date
+        @professional = professional
+        @name = name
+        @surname = surname
+        @phone = phone
+        @notes = notes
       end
 
-      def self.create_appointment(date, name, surname, phone, notes)
-        date = (date.gsub " ", "_").gsub ":", "-"
-        File.open("#{date}.paf", "w") {|file| file.write("#{surname}\n#{name}\n#{phone}\n#{notes}")}
+      def self.create_appointment(date, name, surname, phone, notes, professional)
+        date = DateTime.strptime(date, "%Y-%m-%d %H:%M")
+        appointment = new(date, professional, name, surname, phone, notes)
+        Polycon::Utils.save_appointment(appointment)
       end
 
-      def self.date_format(date)
-        date = "#{(date.gsub " ", "_").gsub ":", "-"}"
-      end
-
-      def self.ensure_appointment_exists(date)
-        File.file?("#{date}.paf")
-      end
-
-      def self.reschedule_appointment(old_date, new_date)
-        File.rename("#{old_date}.paf", "#{new_date}.paf")
+      def reschedule(new_date)
+        if !self.professional.find_appointment(new_date).nil?
+          return false
+        else
+          new_date = DateTime.strptime(new_date, "%Y-%m-%d %H:%M")
+          Polycon::Utils.reschedule_appointment(self, new_date)
+          self.date = new_date
+          return true
+        end
       end
 
       def self.show_appointment(date)
@@ -32,32 +37,8 @@ module Polycon
         end
       end
 
-      def self.cancel_appointment(date)
-        File.delete("#{date}.paf")
-      end
-
-      def self.cancel_all_appointments(professional)
-        hoy = Time.now.strftime("%Y-%m-%d_%H-%M")
-        Dir.children(professional).each do |appointment|
-          if appointment > hoy
-            File.delete("./#{professional}/#{appointment}")
-          end
-        end
-      end
-
-      def self.appointments(date, professional)
-        puts date
-        puts professional
-        appointments = []
-        Polycon::Utils.appointments(professional, date).map do |entry|
-          puts entry
-          appointments << self.from_file(professional, entry)
-        end
-        appointments
-      end
-
-      def self.appointments_in_day(date, professional)
-        Polycon::Utils.appointments_in_day(date, professional)
+      def cancel_appointment
+        Polycon::Utils.cancel_appointment(self)
       end
 
       def self.from_file(professional, date)
@@ -68,13 +49,7 @@ module Polycon
       end
 
       def save(date)
-        date = date.gsub ' ', '_'
-        File.open("#{date}.paf", 'w') do |line|
-          line << "#{surname}\n"
-          line << "#{name}\n"
-          line << "#{phone}\n"
-          line << notes
-        end
+        Polycon::Utils.save_appointment(self)
       end
 
       def edit(options)
@@ -94,7 +69,7 @@ module Polycon
 
       def self.valid_date?(date)
         begin
-          Date.strptime(date, "%Y-%m-%d")
+          date = Date.strptime(date, "%Y-%m-%d")
           true
         rescue ArgumentError
         false
@@ -104,11 +79,6 @@ module Polycon
       def self.date_greater_than_today(old_date)
         hoy = Time.now.strftime("%Y-%m-%d %H:%M")
         old_date > hoy
-      end
-
-      def self.find_appointment(date)
-        appointment = new(date)
-        return appointment if appointment.exists?
       end
 
       def exists?
@@ -121,6 +91,13 @@ module Polycon
 
       def get_only_hour
         date.strftime("%H:%M")
+      end
+
+      def self.valid_date_for_appointment?(date)
+        date = DateTime.strptime(date, "%Y-%m-%d %H:%M")
+        if date.minute == 0 || date.minute == 30
+          true
+        end
       end
     end
   end

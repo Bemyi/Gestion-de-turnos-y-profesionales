@@ -56,11 +56,11 @@ Solo cancela los appointments que tengan fecha mayor a la fecha y hora actual, d
 
 ### Listar appointments para un professional
 
-Se verifica que sea pasado una fecha como parámetro, en dicho caso se imprime los appointments que tiene el professional ese dia, caso contrario, se imprimen todas los appointments que tiene ese professional. Si no hay ningún appointment se informa que no hay turnos.
+Se verifica que sea pasado una fecha como parámetro, en dicho caso se imprime los appointments que tiene el professional ese dia, caso contrario, se imprimen todas las appointments que tiene ese professional. Si no hay ningún appointment se informa que no hay turnos.
 
 ### Reprogramar un appointment
 
-Solo se pueden reprogramar appointments con fecha mayor a la fecha y hora actual.
+Solo se pueden reprogramar appointments con fecha mayor a la fecha y hora actual. No se puede reprogramar para una fecha y hora donde ya existe un appointment para ese professional.
 
 ### Editar un appointment
 

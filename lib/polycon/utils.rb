@@ -85,5 +85,35 @@ module Polycon
     def self.rename_professional(professional, new_name)
       File.rename(root_path + "/#{professional.name}", new_name)
     end
+
+    def self.ensure_appointment_exists(appointment)
+      File.exists?root_path + "/#{appointment.professional.name}/#{date_format(appointment.date)}.paf"
+    end
+
+    def self.date_format(date)
+      date.strftime("%Y-%m-%d_%H-%M")
+    end
+
+    def self.save_appointment(appointment)
+      File.open(root_path + "/#{appointment.professional.name}/#{date_format(appointment.date)}.paf", "w") {|file| file.write("#{appointment.surname}\n#{appointment.name}\n#{appointment.phone}\n#{appointment.notes}")}
+    end
+
+    def self.cancel_appointment(appointment)
+      File.delete(root_path + "/#{appointment.professional.name}/#{date_format(appointment.date)}.paf")
+    end
+
+    def self.cancel_all_appointments(professional)
+      hoy = Time.now.strftime("%Y-%m-%d_%H-%M")
+      Dir.foreach(root_path + "/#{professional.name}") do |appointment|
+        next if appointment == "." or appointment == ".."
+        if appointment > hoy
+          File.delete(root_path + "/#{professional.name}/#{appointment}")
+        end
+      end
+    end
+    
+    def self.reschedule_appointment(appointment, new_date)
+      File.rename(root_path + "/#{appointment.professional.name}/#{date_format(appointment.date)}.paf", root_path + "/#{appointment.professional.name}/#{date_format(new_date)}.paf")
+    end
   end
 end

@@ -14,8 +14,8 @@ module Polycon
         Polycon::Utils.save_professional(professional)
       end
 
-      def appointments
-        Polycon::Utils.appointments(self).map do |date|
+      def appointments(date=nil)
+        Polycon::Utils.appointments(self, date).map do |date|
           Polycon::Models::Appointment.from_file(self, date)
         end
       end
@@ -55,6 +55,15 @@ module Polycon
       def rename(new_name)
         Polycon::Utils.rename_professional(self, new_name)
         self.name = new_name
+      end
+
+      def cancel_all_appointments
+        Polycon::Utils.cancel_all_appointments(self)
+      end
+
+      def find_appointment(date)
+        appointment = Appointment.new(DateTime.strptime(date, "%Y-%m-%d %H:%M"), self)
+        return Polycon::Models::Appointment.from_file(self, date) if appointment.exists?
       end
     end
   end
