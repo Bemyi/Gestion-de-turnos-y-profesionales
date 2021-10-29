@@ -2,7 +2,12 @@ require 'date'
 module Polycon
   module Models
     class Appointment
-      attr_accessor :name, :surname, :phone, :notes, :date, :hour, :professional
+      attr_accessor :name, :surname, :phone, :notes, :date, :professional
+
+      def initialize(date)
+        @date = date
+      end
+
       def self.create_appointment(date, name, surname, phone, notes)
         date = (date.gsub " ", "_").gsub ":", "-"
         File.open("#{date}.paf", "w") {|file| file.write("#{surname}\n#{name}\n#{phone}\n#{notes}")}
@@ -102,13 +107,20 @@ module Polycon
       end
 
       def self.find_appointment(date)
-        appointment = new
-        appointment.
-        return professional if professional.exists?
+        appointment = new(date)
+        return appointment if appointment.exists?
       end
 
       def exists?
-        Utils.ensure_professional_exists(self)
+        Utils.ensure_appointment_exists(self)
+      end
+
+      def get_only_date
+        date.to_date
+      end
+
+      def get_only_hour
+        date.strftime("%H:%M")
       end
     end
   end

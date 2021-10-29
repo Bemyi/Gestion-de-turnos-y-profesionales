@@ -20,7 +20,7 @@ module Polycon
               return 1
             end
           end
-          Polycon::Presentation.appointments_in_day(date, prof)
+          Polycon::Presentation.export_appointments_in_day(date, prof)
         end
       end
 
@@ -43,7 +43,7 @@ module Polycon
               return 1
             end
           end
-          Polycon::Presentation.appointments_in_week(date, prof)
+          Polycon::Presentation.export_appointments_in_week(date, prof)
         end
       end
     end

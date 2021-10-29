@@ -71,8 +71,7 @@ module Polycon
     def self.from_file(appointment, professional, date)
       File.open(root_path + "/#{professional.name}/#{date}.paf", 'r') do |line|
         appointment.professional = professional
-        appointment.date = Date.strptime((date[..-7]), "%Y-%m-%d")
-        appointment.hour = date[11..].gsub '-', ':'
+        appointment.date = DateTime.strptime(date, "%Y-%m-%d_%H-%M")
         appointment.surname = line.readline.chomp
         appointment.name = line.readline.chomp
         appointment.phone = line.readline.chomp
