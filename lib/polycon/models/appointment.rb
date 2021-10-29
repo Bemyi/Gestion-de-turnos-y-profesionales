@@ -92,6 +92,13 @@ module Polycon
           true
         end
       end
+      
+      def self.date_is_sunday?(date)
+        date = DateTime.strptime(date, "%Y-%m-%d %H:%M")
+        if date.wday == 0
+          true
+        end
+      end
     end
   end
 end

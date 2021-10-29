@@ -21,23 +21,28 @@ module Polycon
               warn "Los horarios de los turnos son cada media hora"
               return 1
             else
-              if (Polycon::Models::Appointment.date_greater_than_today(date))
-                prof = Polycon::Models::Professional.find_professional(professional)
-                if prof.nil?
-                  warn "El profesional ingresado no existe"
-                  return 1
-                else
-                  appointment = prof.find_appointment(date)
-                  if !appointment.nil?
-                    warn "Ya existe un turno para esa fecha"
+              if Polycon::Models::Appointment.date_is_sunday?(date)
+                warn "La fecha ingresada no puede ser domingo"
+                return 1
+              else
+                if (Polycon::Models::Appointment.date_greater_than_today(date))
+                  prof = Polycon::Models::Professional.find_professional(professional)
+                  if prof.nil?
+                    warn "El profesional ingresado no existe"
                     return 1
                   else
-                    Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes, prof)
-                    warn "Turno creado exitosamente"
+                    appointment = prof.find_appointment(date)
+                    if !appointment.nil?
+                      warn "Ya existe un turno para esa fecha"
+                      return 1
+                    else
+                      Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes, prof)
+                      warn "Turno creado exitosamente"
+                    end
                   end
+                else
+                  warn "La fecha ingresada debe ser mayor a la fecha de hoy"
                 end
-              else
-                warn "La fecha ingresada debe ser mayor a la fecha de hoy"
               end
             end
           else
@@ -187,26 +192,31 @@ module Polycon
               warn "Los horarios de los turnos son cada media hora"
               return 1
             else
-              if (Polycon::Models::Appointment.date_greater_than_today(old_date) && Polycon::Models::Appointment.date_greater_than_today(new_date))
-                prof = Polycon::Models::Professional.find_professional(professional)
-                if prof.nil?
-                  warn "El profesional ingresado no existe"
-                  return 1
-                else
-                  appointment = prof.find_appointment(old_date)
-                  if appointment.nil?
-                    warn "No existe un turno para esa fecha"
+              if Polycon::Models::Appointment.date_is_sunday?(new_date)
+                warn "La fecha ingresada no puede ser domingo"
+                return 1
+              else
+                if (Polycon::Models::Appointment.date_greater_than_today(old_date) && Polycon::Models::Appointment.date_greater_than_today(new_date))
+                  prof = Polycon::Models::Professional.find_professional(professional)
+                  if prof.nil?
+                    warn "El profesional ingresado no existe"
                     return 1
                   else
-                    if appointment.reschedule(new_date)
-                      warn "El turno se ha modificado exitosamente"
+                    appointment = prof.find_appointment(old_date)
+                    if appointment.nil?
+                      warn "No existe un turno para esa fecha"
+                      return 1
                     else
-                      warn "Existe un turno en esa fecha nueva para ese profesional"
+                      if appointment.reschedule(new_date)
+                        warn "El turno se ha modificado exitosamente"
+                      else
+                        warn "Existe un turno en esa fecha nueva para ese profesional"
+                      end
                     end
                   end
+                else
+                  warn "La fecha ingresada debe ser mayor a la fecha de hoy"
                 end
-              else
-                warn "La fecha ingresada debe ser mayor a la fecha de hoy"
               end
             end
           else
