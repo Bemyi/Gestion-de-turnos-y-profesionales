@@ -20,7 +20,7 @@
           <td>
           <% appointments.each do |appo| %>
             <% if appo.get_only_hour == hora %>
-              <p>Profesional: <%= appo.name %> - Paciente: <%= appo.professional.name %></p>
+              <p>Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %></p>
             <% end %>
           <% end %>
           <td>
