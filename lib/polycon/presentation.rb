@@ -31,17 +31,21 @@ module Polycon
     end
 
     def self.first_day_of_week(date)
-      if (date.wday != 0)
-        date = date - date.wday
-        date
+      if date.wday > 1
+        date = date - (date.wday-1)
+      else
+        if date.wday == 0
+          date = date + 1
+        end
       end
+      date
     end
 
     def self.appointments_week_template(date, professional)
       appointmentsAux = []
       appointments = []
       if professional.nil?
-        (1...8).each do
+        (1...7).each do
           Polycon::Models::Professional.professional_names.map do |prof|
             appointmentsAux += prof.appointments()
           end
@@ -51,7 +55,7 @@ module Polycon
           date = date.next_day
         end
       else
-        (1...8).each do
+        (1...7).each do
           appointmentsAux += professional.appointments()
           appointments += appointmentsAux.select! do |appointment|
             appointment.get_only_date > Date.today && appointment.get_only_date == date
@@ -64,7 +68,7 @@ module Polycon
 
     def self.dates_template(date)
       dates = []
-      (1...8).each do
+      (1...7).each do
         dates << date
         date = date.next_day
       end

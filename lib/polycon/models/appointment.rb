@@ -30,13 +30,6 @@ module Polycon
         end
       end
 
-      def self.show_appointment(date)
-
-        File.readlines(date).each do |line|
-          puts line
-        end
-      end
-
       def cancel_appointment
         Polycon::Utils.cancel_appointment(self)
       end
