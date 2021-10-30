@@ -6,20 +6,8 @@ module Polycon
     def self.export_appointments_in_day(date, professional)
       date = Date.strptime(date, "%Y-%m-%d")
       title = "appointments_of_day_#{date}"
-      appointments = []
-      if professional.nil?
-        Polycon::Models::Professional.professional_names.map do |prof|
-          appointments += prof.appointments()
-        end
-      else
-        appointments += professional.appointments()
-      end
-      appointments.select! do |appointment|
-        appointment.get_only_date > Date.today && appointment.get_only_date == date
-      end
-
       template = ERB.new(File.read("lib/polycon/templates/appointments_in_day.html.erb"))
-      Polycon::Utils.save_template(template, date, title, appointments, horas_template())
+      Polycon::Utils.save_template(template, date, title, appointments_day_template(date, professional), horas_template())
     end
 
     def self.export_appointments_in_week(date, professional)
@@ -41,15 +29,25 @@ module Polycon
       date
     end
 
-    def self.appointments_week_template(date, professional)
+    def self.appointments_day_template(date, professional)
+      appointments = appointments_template(professional)
+      appointments.select { |appointment| appointment.get_only_date == date }
+    end
+
+    def self.appointments_template(professional)
       appointments = []
       if professional.nil?
         Polycon::Models::Professional.professional_names.map do |prof|
           appointments += prof.appointments()
         end
       else
-          appointments += professional.appointments()
+        appointments += professional.appointments()
       end
+      appointments
+    end
+
+    def self.appointments_week_template(date, professional)
+      appointments = appointments_template(professional)
       appointments.select { |appo| (date..date+6).cover? appo.get_only_date }
     end
 

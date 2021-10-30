@@ -39,11 +39,11 @@ module Polycon
             warn "El profesional ingresado no existe"
             return 1
           else
-              if professional.delete()
-                warn "Profesional eliminado exitosamente"
-              else
-                warn "El profesional ingresado tiene turnos pendientes"
-              end
+            if professional.delete()
+              warn "Profesional eliminado exitosamente"
+            else
+              warn "El profesional ingresado tiene turnos pendientes"
+            end
           end
         end
       end
@@ -59,9 +59,7 @@ module Polycon
           if (Polycon::Models::Professional.professional_names).empty?
             warn "No hay profesionales"
           else
-            (Polycon::Models::Professional.professional_names).each do |professional|
-              puts professional.name
-            end
+            puts Polycon::Models::Professional.professional_names
           end
         end
       end

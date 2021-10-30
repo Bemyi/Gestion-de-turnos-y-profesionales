@@ -1,6 +1,6 @@
 module Polycon
   module Commands
-    module Presentation
+    module Presentations
       class AppointmentsInDay < Dry::CLI::Command
         desc 'Generates a grid with all the appointments of a day'
 
@@ -13,14 +13,20 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
-          if !professional.nil?
-            prof = Polycon::Models::Professional.find_professional(professional)
-            if prof.nil?
-              warn "El profesional ingresado no existe"
-              return 1
+          if !Polycon::Models::Appointment.valid_date?(date)
+            warn "Debe ingresar una fecha válida"
+            return 1
+          else
+            if !professional.nil?
+              prof = Polycon::Models::Professional.find_professional(professional)
+              if prof.nil?
+                warn "El profesional ingresado no existe"
+                return 1
+              end
             end
+            Polycon::Presentation.export_appointments_in_day(date, prof)
+            puts "La grilla fue creada con éxito, puede encontrarla en el directorio actual: #{Dir.pwd}"
           end
-          Polycon::Presentation.export_appointments_in_day(date, prof)
         end
       end
 
@@ -36,14 +42,20 @@ module Polycon
         ]
 
         def call(date:, professional:nil)
-          if !professional.nil?
-            prof = Polycon::Models::Professional.find_professional(professional)
-            if prof.nil?
-              warn "El profesional ingresado no existe"
-              return 1
+          if !Polycon::Models::Appointment.valid_date?(date)
+            warn "Debe ingresar una fecha válida"
+            return 1
+          else
+            if !professional.nil?
+              prof = Polycon::Models::Professional.find_professional(professional)
+              if prof.nil?
+                warn "El profesional ingresado no existe"
+                return 1
+              end
             end
+            Polycon::Presentation.export_appointments_in_week(date, prof)
+            puts "La grilla fue creada con éxito, puede encontrarla en el directorio actual: #{Dir.pwd}"
           end
-          Polycon::Presentation.export_appointments_in_week(date, prof)
         end
       end
     end

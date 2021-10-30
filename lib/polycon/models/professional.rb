@@ -5,6 +5,11 @@ module Polycon
       def initialize(name)
         @name = name
       end
+
+      def to_s
+        "Nombre: #{name}"
+      end
+      
       def self.ensure_professional_exists(name)
         Polycon::Utils.ensure_professional_exists(name)
       end

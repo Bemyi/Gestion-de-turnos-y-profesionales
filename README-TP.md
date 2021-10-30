@@ -1,3 +1,5 @@
+### Entrega 1:
+
 ### Models
 
 Cree un module models, el cual contiene los models appointment y professionals. De esta forma el command realiza llamados a los methods de cada modelo y se abstrae de tener que realizar alguna función que en realidad debería realizar el model en cuestión.
@@ -65,3 +67,57 @@ Solo se pueden reprogramar appointments con fecha mayor a la fecha y hora actual
 ### Editar un appointment
 
 Para editarlo, utilizo un método from_file(date), devuelve un objeto appointment, el cual tiene un método para editarlo y otro para guardarlo en el archivo. Se puede editar información de turnos que ya fueron atendidos.
+
+### Entrega 2:
+
+### Creación de nuevo comando Presentations
+
+Se creó un nuevo comando para poder pedir la exportación de una grilla semanal o de un día en específico (dós métodos separados). En ambos métodos se valida la fecha y el profesional, luego se realiza el llamado a un método de Presentation (para semana o día, según corresponda).
+
+### Creación del directorio Templates
+
+En este se guardan templates .html.erb, los cuales son utilizados en Presentation para poder generar la grilla con la librería ERB.
+
+### Exportar appointments para un dia
+
+Utilizando la librería ERB, leemos de un template para guardar el esqueleto de la grilla, luego se envía el template con los datos necesarios para escribir en él al método Utils.save_template, el cual lo que hace es escribir el template en un nuevo archivo .html, generado en donde se encuentre parado el usuario que ejecuta el comando.
+
+### Métodos de soporte en Presentation:
+
+### first_day_of_week
+
+Es usado a la hora de crear la grilla semanal, para obtener el día lunes, según la fecha que venga por parámetro. Si viene un día mayor que lunes, vuelve al lunes de esa semana, si viene el día domingo, me devuelve el lunes que le sigue al mismo.
+
+### appointments_day_template
+
+Con todos los appointments(puede ser de un professional o de todos), filtra y se queda con los que coincidan para un día en específico.
+
+### appointments_week_template
+
+Con todos los appointments(puede ser de un professional o de todos), filtra y se queda con los que coincidan para un rango de 6 días
+
+### appointments_template
+
+Si el parámetro professional es nil, obtiene todos los appointments de todos los professionals, sino, obtiene todos los de un professional específico.
+
+### dates_template
+
+Devuelve un arreglo de 6 fechas, las 5 siguientes de la que fue pasada por parámetro.
+
+### horas_template
+
+Devuelve un arreglo de strings de horas, de las 10 a las 20:30 (es un rango de horarios que pensé yo para el polyconsultorio).
+
+### Correcciones entrega 1:
+
+### Utils
+
+Todo lo referido a acceso a disco que estaban en los modelos fueron movidos a Utils.
+
+### Professional y Appointment
+
+Se corrigió que professional y appointment fuera más objetoso y la mayoría de los métodos que eran de clases, fueron pasados a instancia (ej: métodos que crean, modifican, etc.). De esta forma, por ejemplo, a la hora de validar que un professional exista, se crea la instancia del mismo, si este es nil significa que el professional no existe, si se devuelve una instancia professional, es porque existe.
+
+### Otras desiciones de diseño:
+
+Se asume que el usuario ingresa los turnos en bloque de media hora y que están en el rango de 10 a 20:30

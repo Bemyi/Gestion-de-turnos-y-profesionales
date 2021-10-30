@@ -2,7 +2,7 @@ module Polycon
   module Commands
     autoload :Professionals, 'polycon/commands/professionals'
     autoload :Appointments, 'polycon/commands/appointments'
-    autoload :Presentation, 'polycon/commands/presentation'
+    autoload :Presentations, 'polycon/commands/presentations'
     autoload :Version, 'polycon/commands/version'
 
     extend Dry::CLI::Registry
@@ -25,8 +25,8 @@ module Polycon
     end
 
     register 'presentation', aliases: ['pre'] do |prefix|
-      prefix.register 'appointments-in-day', Presentation::AppointmentsInDay
-      prefix.register 'appointments-in-week', Presentation::AppointmentsInWeek
+      prefix.register 'appointments-in-day', Presentations::AppointmentsInDay
+      prefix.register 'appointments-in-week', Presentations::AppointmentsInWeek
     end
 
     register 'version', Version, aliases: ['v', '-v', '--version']

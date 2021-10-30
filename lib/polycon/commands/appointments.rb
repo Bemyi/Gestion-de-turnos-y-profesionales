@@ -33,7 +33,7 @@ module Polycon
                   else
                     appointment = prof.find_appointment(date)
                     if !appointment.nil?
-                      warn "Ya existe un turno para esa fecha"
+                      warn "Ya existe un turno para esa fecha, para dicho profesional"
                       return 1
                     else
                       Polycon::Models::Appointment.create_appointment(date, name, surname, phone, notes, prof)
@@ -154,7 +154,7 @@ module Polycon
         ]
 
         def call(professional:, date:nil)
-          if date.nil? || Polycon::Models::Appointment.valid_date?(date)
+          if Polycon::Models::Appointment.valid_date?(date)
             prof = Polycon::Models::Professional.find_professional(professional)
             if prof.nil?
               warn "El profesional ingresado no existe"
@@ -204,7 +204,7 @@ module Polycon
                   else
                     appointment = prof.find_appointment(old_date)
                     if appointment.nil?
-                      warn "No existe un turno para esa fecha"
+                      warn "No existe un turno para esa fecha, para dicho profesional"
                       return 1
                     else
                       if appointment.reschedule(new_date)
