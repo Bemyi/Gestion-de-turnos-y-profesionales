@@ -120,4 +120,4 @@ Se corrigió que professional y appointment fuera más objetoso y la mayoría de
 
 ### Otras desiciones de diseño:
 
-Se asume que el usuario ingresa los turnos en bloque de media hora y que están en el rango de 10 a 20:30
+Se asume que el usuario ingresa los turnos en bloque de media hora y que están en el rango de 10 a 21, siendo el último turno el de las 20:30hs
