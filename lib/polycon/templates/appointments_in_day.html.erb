@@ -5,27 +5,31 @@
     <title><%= title %></title>
     <meta charset="UTF-8">
   </head>
-  <body>
-    <table class="table table-bordered table-dark">
-      <thead>
-        <tr>
-          <th scope="col">hora/dia</th>
-          <th scope="col"><%= date %></th>
-        </tr>
-      </thead>
-      <tbody>
-      <% horas.each do |hora| %>
-        <tr>
-          <th scope="row"><%= hora %></th>
-          <td>
-          <% appointments.each do |appo| %>
-            <% if appo.get_only_hour == hora %>
-              <p>Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %></p>
-            <% end %>
+  <body style="background-color:#312d2d">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <table class="table table-bordered table-dark">
+          <thead>
+            <tr>
+              <th scope="col">hora/dia</th>
+              <th scope="col"><%= date %></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% horas.each do |hora| %>
+            <tr>
+              <th scope="row"><%= hora %></th>
+              <td>
+              <% appointments.each do |appo| %>
+                <% if appo.get_only_hour == hora %>
+                  <p>Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %></p>
+                <% end %>
+              <% end %>
+              <td>
+            </tr>
           <% end %>
-          <td>
-        </tr>
-      <% end %>
-    </table>
+        </table>
+      </div>
+    </div>
   </body>
 </html>

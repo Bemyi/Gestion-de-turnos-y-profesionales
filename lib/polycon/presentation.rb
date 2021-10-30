@@ -42,28 +42,15 @@ module Polycon
     end
 
     def self.appointments_week_template(date, professional)
-      appointmentsAux = []
       appointments = []
       if professional.nil?
-        (1...7).each do
-          Polycon::Models::Professional.professional_names.map do |prof|
-            appointmentsAux += prof.appointments()
-          end
-          appointments += appointmentsAux.select! do |appointment|
-            appointment.get_only_date > Date.today && appointment.get_only_date == date
-          end
-          date = date.next_day
+        Polycon::Models::Professional.professional_names.map do |prof|
+          appointments += prof.appointments()
         end
       else
-        (1...7).each do
-          appointmentsAux += professional.appointments()
-          appointments += appointmentsAux.select! do |appointment|
-            appointment.get_only_date > Date.today && appointment.get_only_date == date
-          end
-          date = date.next_day
-        end
+          appointments += professional.appointments()
       end
-      appointments
+      appointments.select { |appo| (date..date+6).cover? appo.get_only_date }
     end
 
     def self.dates_template(date)
