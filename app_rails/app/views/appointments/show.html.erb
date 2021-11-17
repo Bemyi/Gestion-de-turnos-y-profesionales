@@ -1,8 +1,10 @@
 <p id="notice"><%= notice %></p>
 
+<h1>Appointment details</h1>
+
 <p>
   <strong>Professional:</strong>
-  <%= @appointment.professional_id %>
+  <%= @appointment.professional.name %>
 </p>
 
 <p>
@@ -30,5 +32,5 @@
   <%= @appointment.date %>
 </p>
 
-<%= link_to 'Edit', edit_appointment_path(@appointment) %> |
-<%= link_to 'Back', appointments_path %>
+<%= link_to 'Edit', edit_professional_appointment_path(@appointment) %> |
+<%= link_to 'Back', @appointment.professional %>

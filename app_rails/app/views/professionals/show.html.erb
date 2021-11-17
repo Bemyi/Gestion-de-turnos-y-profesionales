@@ -1,9 +1,37 @@
 <p id="notice"><%= notice %></p>
 
+<h1>Professional details</h1>
+
 <p>
   <strong>Name:</strong>
   <%= @professional.name %>
 </p>
+
+<%= link_to 'Appointments', professional_appointments_path(@professional) %>
+
+<h2>Appointments of <%= @professional.name %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @professional.appointments.each do |appointment| %>
+      <tr>
+        <td><%= appointment.name %></td>
+        <td><%= appointment.date %></td>
+        <td><%= link_to 'Show', [@professional, appointment] %></td>
+        <td><%= link_to 'Edit', edit_professional_appointment_path(@professional, appointment) %></td>
+        <td><%= link_to 'Destroy', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_professional_path(@professional) %> |
 <%= link_to 'Back', professionals_path %>

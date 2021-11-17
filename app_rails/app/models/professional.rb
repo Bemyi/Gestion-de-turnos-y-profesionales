@@ -3,6 +3,16 @@ class Professional < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   before_destroy :has_appointments?, prepend: true #prioriza este callback, lo ordena primero
   
+  def to_s
+    name
+  end
+
+  def find_appointment(appointment)
+    if self.appointments.where("date == ?", appointment.date).exists?
+      true
+    end
+  end
+
   protected
 
   def has_appointments?
