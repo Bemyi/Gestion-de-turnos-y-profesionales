@@ -24,7 +24,7 @@
         <td><%= appointment.date %></td>
         <td><%= link_to 'Show', [@professional, appointment] %></td>
         <td><%= link_to 'Edit', edit_professional_appointment_path(@professional, appointment) %></td>
-        <td><%= link_to 'Destroy', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Cancel', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

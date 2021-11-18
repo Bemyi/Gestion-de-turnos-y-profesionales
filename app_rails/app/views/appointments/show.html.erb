@@ -3,11 +3,6 @@
 <h1>Appointment details</h1>
 
 <p>
-  <strong>Professional:</strong>
-  <%= @appointment.professional.name %>
-</p>
-
-<p>
   <strong>Name:</strong>
   <%= @appointment.name %>
 </p>
@@ -33,4 +28,4 @@
 </p>
 
 <%= link_to 'Edit', edit_professional_appointment_path(@appointment) %> |
-<%= link_to 'Back', @appointment.professional %>
+<%= link_to 'Back', professional_appointments_path(@professional) %>

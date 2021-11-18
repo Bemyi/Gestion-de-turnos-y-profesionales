@@ -24,9 +24,7 @@ class Appointment < ApplicationRecord
   end
 
   def already_exists
-    puts "hola"
-    puts self.professional.find_professional(self)
-    if self.professional.find_professional(self)
+    if self.professional.find_appointment(self)
       errors.add :date, 'Ya existe un turno para esa fecha, para dicho profesional'
     end
   end

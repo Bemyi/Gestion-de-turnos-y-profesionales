@@ -8,8 +8,13 @@ class Professional < ApplicationRecord
   end
 
   def find_appointment(appointment)
-    if self.appointments.where("date == ?", appointment.date).exists?
+    puts self.appointments.where("date = ? AND id != ?", appointment.date, appointment.id).exists?
+    if self.appointments.where("date = ? AND id != ?", appointment.date, appointment.id).exists?
+      puts "entro true"
       true
+    else
+      puts "entro false"
+      false
     end
   end
 
