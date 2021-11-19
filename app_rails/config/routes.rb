@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   root to: 'professionals#index'
 # CRUD new, create, edit, update, show, destroy, index
   resources :professionals do

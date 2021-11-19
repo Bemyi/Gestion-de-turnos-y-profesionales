@@ -6,9 +6,6 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Surname</th>
-      <th>Phone</th>
-      <th>Notes</th>
       <th>Date</th>
       <th colspan="3"></th>
     </tr>
@@ -18,9 +15,6 @@
     <% @appointments.each do |appointment| %>
       <tr>
         <td><%= appointment.name %></td>
-        <td><%= appointment.surname %></td>
-        <td><%= appointment.phone %></td>
-        <td><%= appointment.notes %></td>
         <td><%= appointment.date %></td>
         <td><%= link_to 'Show', [@professional, appointment] %></td>
         <td><%= link_to 'Edit', edit_professional_appointment_path(@professional, appointment) %></td>
