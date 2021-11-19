@@ -4,7 +4,7 @@ class AppointmentsController < ApplicationController
 
   # GET /appointments or /appointments.json
   def index
-    @appointments = @professional.appointments
+    @appointments = @professional.appointments.order(:date)
   end
 
   # GET /appointments/1 or /appointments/1.json
@@ -22,7 +22,7 @@ class AppointmentsController < ApplicationController
 
   # POST /appointments or /appointments.json
   def create
-    @appointment = Appointment.new(appointment_params)
+    @appointment = @professional.appointments.new(appointment_params)
 
     respond_to do |format|
       if @appointment.save
@@ -52,7 +52,15 @@ class AppointmentsController < ApplicationController
   def destroy
     @appointment.destroy
     respond_to do |format|
-      format.html { redirect_to [@professional, @appointment], notice: "Appointment was successfully destroyed." }
+      format.html { redirect_to [@professional, @appointment], notice: "Appointment was successfully cancelled." }
+      format.json { head :no_content }
+    end
+  end
+
+  def cancel_all
+    @professional.cancel_all
+    respond_to do |format|
+      format.html { redirect_to professional_appointments_path(@professional), notice: "Appointments were successfully cancelled." }
       format.json { head :no_content }
     end
   end
@@ -65,7 +73,7 @@ class AppointmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def appointment_params
-      params.require(:appointment).permit(:professional_id, :name, :surname, :phone, :notes, :date)
+      params.require(:appointment).permit(:name, :surname, :phone, :notes, :date)
     end
 
     def set_professional

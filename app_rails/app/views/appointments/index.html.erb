@@ -29,7 +29,7 @@
     <% end %>
   </tbody>
 </table>
-
+<p><%= link_to 'Cancel all', cancel_all_professional_appointments_path(@professional), method: :delete, data: { confirm: 'Are you sure?' } %></p>
 <br>
 
 <%= link_to 'New Appointment', new_professional_appointment_path(@professional) %>

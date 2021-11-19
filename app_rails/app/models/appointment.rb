@@ -2,7 +2,9 @@ class Appointment < ApplicationRecord
   belongs_to :professional
 
   validates :name, :surname, :phone, presence: true
-  validate :date_greater_than_today, :date_is_sunday?, :valid_date_for_appointment?, :already_exists
+  validates :date, uniqueness: {scope: :professional_id}
+  validate :date_greater_than_today, :date_is_sunday?, :valid_date_for_appointment?
+  
   protected #para que solo se puedan utilizar aca los metodos
 
   def date_greater_than_today
@@ -22,12 +24,4 @@ class Appointment < ApplicationRecord
       errors.add :date, 'Los horarios de los turnos son cada media hora'
     end
   end
-
-  def already_exists
-    if self.professional.find_appointment(self)
-      errors.add :date, 'Ya existe un turno para esa fecha, para dicho profesional'
-    end
-  end
-
-  
 end

@@ -3,7 +3,7 @@ class ProfessionalsController < ApplicationController
 
   # GET /professionals or /professionals.json
   def index
-    @professionals = Professional.all
+    @professionals = Professional.order(:name)
   end
 
   # GET /professionals/1 or /professionals/1.json

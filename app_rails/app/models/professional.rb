@@ -7,15 +7,8 @@ class Professional < ApplicationRecord
     name
   end
 
-  def find_appointment(appointment)
-    puts self.appointments.where("date = ? AND id != ?", appointment.date, appointment.id).exists?
-    if self.appointments.where("date = ? AND id != ?", appointment.date, appointment.id).exists?
-      puts "entro true"
-      true
-    else
-      puts "entro false"
-      false
-    end
+  def cancel_all
+    self.appointments.where("date > ?", DateTime.now).destroy_all
   end
 
   protected
