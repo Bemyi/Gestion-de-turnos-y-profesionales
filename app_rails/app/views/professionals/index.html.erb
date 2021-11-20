@@ -15,13 +15,18 @@
       <tr>
         <td><%= professional.name %></td>
         <td><%= link_to 'Show', professional %></td>
-        <td><%= link_to 'Edit', edit_professional_path(professional) %></td>
-        <td><%= link_to 'Destroy', professional, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% if can? :update, professional %>
+          <td><%= link_to 'Edit', edit_professional_path(professional) %></td>
+        <% end %>
+        <% if can? :destroy, professional %>
+          <td><%= link_to 'Destroy', professional, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Professional', new_professional_path %>
+<% if can? :create, Professional %>
+  <%= link_to 'New Professional', new_professional_path %>
+<% end %>
