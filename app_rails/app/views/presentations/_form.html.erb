@@ -1,0 +1,22 @@
+<%= form_for :form_data, url: export_appointments_path do |form| %>
+
+  <div class="field">
+    <%= form.label :professional %>
+    <%= form.collection_select :professional, @professionals, :id, :name, :include_blank => true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.date_field :date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :type %>
+    <%= form.select :type, ["Dia", "Semanal"] %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "Exportar" %>
+  </div>
+
+<% end %>

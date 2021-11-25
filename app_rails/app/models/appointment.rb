@@ -5,6 +5,10 @@ class Appointment < ApplicationRecord
   validates :date, uniqueness: {scope: :professional_id}
   validate :date_greater_than_today, :date_is_sunday?, :valid_date_for_appointment?
   
+  def get_only_hour
+    date.strftime("%H:%M")
+  end
+
   protected #para que solo se puedan utilizar aca los metodos
 
   def date_greater_than_today
