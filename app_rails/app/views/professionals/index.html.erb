@@ -28,5 +28,6 @@
 
 <br>
 <% if can? :create, Professional %>
-  <%= link_to 'New Professional', new_professional_path %>
+  <%= link_to 'New Professional', new_professional_path %> |
 <% end %>
+<%= link_to 'Export appointments', appointments_grid_path %>

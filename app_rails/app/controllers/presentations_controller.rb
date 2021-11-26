@@ -6,8 +6,9 @@ class PresentationsController < ApplicationController
     @presentation = Presentation.new
   end
 
-  def appointments
+  def new_export
     @professionals = Professional.order(:name)
+    @presentation = Presentation.new
   end
 
   def export_appointments
@@ -18,10 +19,14 @@ class PresentationsController < ApplicationController
       end
       if @presentation.type == "Dia"
         helpers.export_appointments_in_day(@presentation.date, @professional)
+        date = @presentation.date
       else
         helpers.export_appointments_in_week(@presentation.date, @professional)
+        date = @presentation.date.to_date.at_beginning_of_week
       end
-      redirect_to :action => 'appointments', notice: "La grilla fue creada con éxito, puede encontrarla en el directorio actual: #{Dir.pwd}."
+      send_file "#{Dir.pwd}/tmp/appointments_of_#{date}.html"
+    else
+      render :new_export, status: :unprocessable_entity
     end
   end
 

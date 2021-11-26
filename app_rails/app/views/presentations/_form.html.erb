@@ -1,5 +1,7 @@
 <%= form_for :form_data, url: export_appointments_path do |form| %>
 
+  
+
   <div class="field">
     <%= form.label :professional %>
     <%= form.collection_select :professional, @professionals, :id, :name, :include_blank => true %>
@@ -16,7 +18,7 @@
   </div>
 
   <div class="actions">
-    <%= submit_tag "Exportar" %>
+    <%= submit_tag "Exportar", data: {disable_with: false} %>
   </div>
 
 <% end %>

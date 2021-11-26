@@ -11,7 +11,7 @@ module PresentationsHelper
     date = Date.strptime(date, "%Y-%m-%d")
     date = first_day_of_week(date)
     title = "appointments_of_week_#{date}"
-    template = ERB.new(File.read("/home/bemyi/TP-Integrador/TPI/app_rails/templates/appointments_in_week.html.erb"))
+    template = ERB.new(File.read("#{Dir.pwd}/templates/appointments_in_week.html.erb"))
     save_template(template, date, title, appointments_week_template(date, professional), self.horas_template(), self.dates_template(date))
   end
 
@@ -67,6 +67,7 @@ module PresentationsHelper
   end
 
   def save_template(template, date, title, appointments, horas, dates=nil)
-    File.open("#{Dir.pwd}/appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
+    puts "HOLAAA"
+    File.open("#{Dir.pwd}/tmp/appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
   end
 end

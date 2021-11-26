@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     end
   end
   
-  get 'appointments_grid', to: 'presentations#appointments', as: 'appointments_grid'
+  get 'appointments_grid', to: 'presentations#new_export', as: 'appointments_grid'
   post 'export_appointments', to: 'presentations#export_appointments', as: 'export_appointments'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
