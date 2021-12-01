@@ -1,7 +1,15 @@
-<h2>Sign up</h2>
+<%= form_with(model: user, url:new_users_admin_path) do |f| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <%= f.select(:role, User.roles.keys.map {|role| [role.titleize,role]}) %>
 
@@ -24,8 +32,6 @@
   </div>
 
   <div class="actions">
-    <%= f.submit "Sign up" %>
+    <%= f.submit %>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>
