@@ -1,13 +1,11 @@
 class PresentationsController < ApplicationController
   load_and_authorize_resource
-  before_action :authenticate_user!
 
   def new
     @presentation = Presentation.new
   end
 
   def new_export
-    @professionals = Professional.order(:name)
     @presentation = Presentation.new
   end
 
@@ -24,7 +22,7 @@ class PresentationsController < ApplicationController
         helpers.export_appointments_in_week(@presentation.date, @professional)
         date = @presentation.date.to_date.at_beginning_of_week
       end
-      send_file "#{Dir.pwd}/tmp/appointments_of_#{date}.html"
+      send_file Rails.root.join("tmp/appointments_of_#{date}.html")
     else
       render :new_export, status: :unprocessable_entity
     end

@@ -8,10 +8,13 @@ class Ability
     elsif user.asistencia?
       can :manage, Appointment
       can :create, Professional
-      can :show, Professional
-      can :index, Professional
+      can :manage, Presentation
+      can :read, :all
+      cannot :read, User
     else
       can :read, :all
+      cannot :read, User
+      can :manage, Presentation
     end
     # Define abilities for the passed in user here. For example:
     #
