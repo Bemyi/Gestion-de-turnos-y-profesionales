@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
-  resources :users_admin, :controller => 'users'
+  scope "/admin" do
+    resources :users
+  end
   devise_for :users
   root to: 'professionals#index'
 # CRUD new, create, edit, update, show, destroy, index

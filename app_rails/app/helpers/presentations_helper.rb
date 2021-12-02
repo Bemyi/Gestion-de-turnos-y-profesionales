@@ -67,7 +67,6 @@ module PresentationsHelper
   end
 
   def save_template(template, date, title, appointments, horas, dates=nil)
-    puts "HOLAAA"
     File.open("#{Dir.pwd}/tmp/appointments_of_#{date}.html", "w+") {|file| file.write("#{template.result binding}")}
   end
 end
