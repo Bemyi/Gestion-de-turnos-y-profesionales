@@ -23,13 +23,7 @@ class PresentationsController < ApplicationController
         exportPresentation.export_appointments_in_week(@presentation.date, @professional)
         date = @presentation.date.to_date.at_beginning_of_week
       end
-      begin
-        File.open(Rails.root.join("tmp/appointments_of_#{date}.html"), 'r') do |f|
-          send_data f.read, :filename => "appointments_of_#{date}.html"
-        end
-      ensure 
-        Rails.root.join("tmp/appointments_of_#{date}.html").unlink
-      end
+      send_file(Rails.root.join("tmp/appointments_of_#{date}.html"))
     else
       render :new_export, status: :unprocessable_entity
     end
