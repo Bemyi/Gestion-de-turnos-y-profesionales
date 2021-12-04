@@ -20,11 +20,9 @@
             <tr>
               <th scope="row"><%= hora %></th>
               <td>
-              <% appointments.each do |appo| %>
-                <% if appo.get_only_hour == hora %>
+                <% appointmentsTemplate[date][hora].each do |appo| %>
                   <p>Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %></p>
                 <% end %>
-              <% end %>
               <td>
             </tr>
           <% end %>

@@ -28,7 +28,18 @@ class ExportPresentation
 
   def appointments_day_template(date, professional)
     appointments = appointments_template(professional)
-    appointments.select { |appointment| appointment.date.to_date == date }
+    appointments = appointments.select { |appointment| appointment.date.to_date == date }
+    appointmentsTemplate = {}
+    appointmentsTemplate[date] = {}
+    self.horas_template.each do |hour|
+      appointmentsTemplate[date][hour] = []
+      appointments.each do |appointment|
+        if date == appointment.date.to_date && hour == appointment.get_only_hour
+          appointmentsTemplate[date][hour] << appointment
+        end
+      end
+    end
+    appointmentsTemplate
   end
 
   def appointments_template(professional)
@@ -58,13 +69,6 @@ class ExportPresentation
         end
       end
     end
-    self.dates_template(date).each do |date|
-      self.horas_template.each do |hour|
-        puts "otra hora"
-        puts appointmentsTemplate[date][hour]
-      end
-    end
-    puts "HOLAAA"
     appointmentsTemplate
   end
 
