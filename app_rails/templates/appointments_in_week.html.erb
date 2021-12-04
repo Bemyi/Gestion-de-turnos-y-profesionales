@@ -24,10 +24,8 @@
           <th scope="row"><%= hora %></th>
           <% dates.each do |date| %>
             <td>
-              <% appointments.each do |appo| %>
-                <% if appo.get_only_hour == hora && appo.date.to_date == date %>
-                  <p>Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %></p>
-                <% end %>
+              <% appointmentsTemplate[date][hora].each do |appo| %>
+                <p>Profesional: <%= appo.professional.name %> - Paciente: <%= appo.name %></p>
               <% end %>
             </td>
           <% end %>

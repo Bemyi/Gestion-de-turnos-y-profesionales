@@ -45,7 +45,27 @@ class ExportPresentation
 
   def appointments_week_template(date, professional)
     appointments = appointments_template(professional)
-    appointments.select { |appo| (date..date+6).cover? appo.date.to_date }
+    appointments = appointments.select { |appo| (date..date+6).cover? appo.date.to_date }
+    appointmentsTemplate = {}
+    self.dates_template(date).each do |date|
+      appointmentsTemplate[date] = {}
+      self.horas_template.each do |hour|
+        appointmentsTemplate[date][hour] = []
+        appointments.each do |appointment|
+          if date == appointment.date.to_date && hour == appointment.get_only_hour
+            appointmentsTemplate[date][hour] << appointment
+          end
+        end
+      end
+    end
+    self.dates_template(date).each do |date|
+      self.horas_template.each do |hour|
+        puts "otra hora"
+        puts appointmentsTemplate[date][hour]
+      end
+    end
+    puts "HOLAAA"
+    appointmentsTemplate
   end
 
   def dates_template(date)
@@ -66,7 +86,7 @@ class ExportPresentation
     horas
   end
 
-  def save_template(template, date, title, appointments, horas, dates=nil)
+  def save_template(template, date, title, appointmentsTemplate, horas, dates=nil)
     File.open(Rails.root.join("tmp/appointments_of_#{date}.html"), "w+") {|file| file.write("#{template.result binding}")}
   end
 end
