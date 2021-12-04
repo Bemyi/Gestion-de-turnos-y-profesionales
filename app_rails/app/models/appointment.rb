@@ -28,13 +28,13 @@ class Appointment < ApplicationRecord
 
   def date_is_sunday?
     if self.date.sunday?
-      errors.add :date, 'La fecha ingresada no puede ser domingo'
+      errors.add :date, 'The date cannot be sunday'
     end
   end
 
   def valid_date_for_appointment?
     if !(self.date.min == 0 || self.date.min == 30)
-      errors.add :date, 'Los horarios de los turnos son cada media hora'
+      errors.add :date, 'Shift times are every half hour'
     end
   end
 end

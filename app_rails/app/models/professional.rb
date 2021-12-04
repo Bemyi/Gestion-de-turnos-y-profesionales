@@ -15,7 +15,7 @@ class Professional < ApplicationRecord
 
   def has_appointments?
     if self.appointments.where("date > ?", DateTime.now).exists?
-      errors.add :base, 'El profesional ingresado tiene turnos pendientes'
+      errors.add :base, 'The professional has pending appointments'
     throw :abort #para frenar
     end
   end
