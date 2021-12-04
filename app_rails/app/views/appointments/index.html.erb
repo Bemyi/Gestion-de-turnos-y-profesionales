@@ -1,7 +1,12 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Appointments of <%= @professional %></h1>
-
+<%= form_for :search, url: professional_appointments_path(@professional), method: :get do |f| %>
+  <%= f.label :dateS, "Search by date:" %>
+  <%= f.date_field :dateS, value: @dateS %>
+  <%= f.submit 'Search' %>
+  <%= link_to 'Reset', professional_appointments_path(@professional) %>
+  <% end %>
 <table>
   <thead>
     <tr>

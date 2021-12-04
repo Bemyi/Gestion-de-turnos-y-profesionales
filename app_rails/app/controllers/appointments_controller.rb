@@ -6,6 +6,12 @@ class AppointmentsController < ApplicationController
   # GET /appointments or /appointments.json
   def index
     @appointments = @professional.appointments.order(:date)
+
+    if search_params[:dateS].present?
+      @appointments = @appointments.search_by_date(search_params[:dateS])
+    end
+
+    @dateS = search_params[:dateS]
   end
 
   # GET /appointments/1 or /appointments/1.json
@@ -79,5 +85,13 @@ class AppointmentsController < ApplicationController
 
     def set_professional
       @professional = Professional.find(params[:professional_id])
+    end
+
+    def search_params
+      if params.key?(:search)
+        params.require(:search).permit(:dateS)
+      else
+        {}
+      end
     end
 end

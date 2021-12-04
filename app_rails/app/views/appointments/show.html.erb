@@ -27,6 +27,6 @@
   <%= @appointment.date %>
 </p>
 <% if can? :update, Appointment %>
-  <%= link_to 'Edit', edit_professional_appointment_path(@appointment) %> |
+  <%= link_to 'Edit', edit_professional_appointment_path(@professional, @appointment) %> |
 <% end %>
 <%= link_to 'Back', professional_appointments_path(@professional) %>

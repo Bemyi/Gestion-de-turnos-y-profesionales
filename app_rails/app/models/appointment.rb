@@ -4,6 +4,7 @@ class Appointment < ApplicationRecord
   validates :name, :surname, :phone, presence: true
   validates :date, uniqueness: {scope: :professional_id}
   validate :date_greater_than_today, :date_is_sunday?, :valid_date_for_appointment?
+  scope :search_by_date, -> (dateS) {where("DATE(date) = ?", dateS)}
   
   def get_only_hour
     date.strftime("%H:%M")
