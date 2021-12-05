@@ -15,7 +15,7 @@ class Appointment < ApplicationRecord
 
   def is_an_old_appointment?
     if self.date < DateTime.now
-      errors.add :base, 'The date must be greater than today'
+      errors.add :base, 'An old appointment cannot be cancelled'
     throw :abort
     end
   end

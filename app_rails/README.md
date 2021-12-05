@@ -144,3 +144,7 @@ Ya no se filtran los appointments en la vista, se envía un hash desde la clase 
 Ahora no se guarda la grilla en un directorio, sino que se le envía al usuario como un descargable, la lógica de la exportación de grilla queda en una clase en el directorio /app/presentation.
 Si se envía el campo professional en blanco, se asume que quiere la grilla de todos los professionals.
 Cualquier rol puede descargar grillas.
+
+### Listar appointments
+
+Se siguen pudiendo cancelar solo appointments futuros, para validar que el usuario no pueda cancelar viejos se realiza una validación a la hora de cancelar y además no se le muestra el boton de cancel si es un appointment viejo (método en helper de appointment).

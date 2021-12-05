@@ -50,7 +50,7 @@
                         <% if can? :update, appointment %>
                           <td><%= link_to 'Edit', edit_professional_appointment_path(@professional, appointment), :class => "btn btn-primary btn-sm" %></td>
                         <% end %>
-                        <% if can? :destroy, appointment %>
+                        <% if (can? :destroy, appointment) && !is_an_old_appointment?(appointment) %>
                         <td><%= link_to 'Cancel', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger btn-sm" %></td>
                         <% end %>
                       </tr>
