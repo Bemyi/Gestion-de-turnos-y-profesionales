@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    @users = User.where.not(id: current_user.id)
+    @users = User.order(:email)
   end
 
   # GET /users/1 or /users/1.json

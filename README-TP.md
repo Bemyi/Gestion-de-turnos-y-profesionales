@@ -121,3 +121,20 @@ Se corrigió que professional y appointment fuera más objetoso y la mayoría de
 ### Otras desiciones de diseño:
 
 Se asume que el usuario ingresa los turnos en bloque de media hora y que están en el rango de 10 a 21, siendo el último turno el de las 20:30hs
+
+### Entrega 3:
+
+Todo lo de la entrega 2 se pasó a rails, ahora se guarda toda la información en una base de datos.
+
+### Users:
+
+Se creó un modelo users, para poder realizar la autenticación de usuarios con roles. Para la autenticación se utilizó la gema devise y para los roles cancancan.
+Los roles se guardan como int en la bd:
+0 --> consulta
+1 --> asistencia
+2 --> administracion
+A la administración de los usuarios, solo puede acceder un usuario el rol de administración. El mismo puede ver, editar y eliminar a los demás usuarios, sobre él mismo solo puede ver y editar datos.
+
+### Corrección de la entrega anterior:
+
+Ya no se filtran los appointments en la vista, se envía un hash desde la clase Presentation con los appointments organizados por fecha y hora.
