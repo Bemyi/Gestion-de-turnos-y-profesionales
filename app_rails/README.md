@@ -133,7 +133,7 @@ Los roles se guardan como int en la bd:
 0 --> consulta
 1 --> asistencia
 2 --> administracion
-A la administración de los usuarios, solo puede acceder un usuario el rol de administración. El mismo puede ver, editar y eliminar a los demás usuarios, sobre él mismo solo puede ver y editar datos.
+A la administración de los usuarios, solo puede acceder un usuario el rol de administración. El mismo puede ver, editar, crear y eliminar a los demás usuarios, sobre él mismo solo puede ver y editar datos.
 
 ### Corrección de la entrega anterior:
 
