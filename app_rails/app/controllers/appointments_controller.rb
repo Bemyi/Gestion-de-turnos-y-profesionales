@@ -31,27 +31,19 @@ class AppointmentsController < ApplicationController
   def create
     @appointment = @professional.appointments.new(appointment_params)
 
-    respond_to do |format|
-      if @appointment.save
-        format.html { redirect_to [@professional, @appointment], notice: "Appointment was successfully created." }
-        format.json { render :show, status: :created, location: @appointment }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @appointment.errors, status: :unprocessable_entity }
-      end
+    if @appointment.save
+      redirect_to [@professional, @appointment], notice: "Appointment was successfully created."
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /appointments/1 or /appointments/1.json
   def update
-    respond_to do |format|
-      if @appointment.update(appointment_params)
-        format.html { redirect_to [@professional, @appointment], notice: "Appointment was successfully updated." }
-        format.json { render :show, status: :ok, location: @appointment }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @appointment.errors, status: :unprocessable_entity }
-      end
+    if @appointment.update(appointment_params)
+      redirect_to [@professional, @appointment], notice: "Appointment was successfully updated." 
+    else
+      render :edit, status: :unprocessable_entity 
     end
   end
 
@@ -67,10 +59,7 @@ class AppointmentsController < ApplicationController
 
   def cancel_all
     @professional.cancel_all
-    respond_to do |format|
-      format.html { redirect_to professional_appointments_path(@professional), notice: "Appointments were successfully cancelled." }
-      format.json { head :no_content }
-    end
+    redirect_to professional_appointments_path(@professional), notice: "Appointments were successfully cancelled." 
   end
 
   private

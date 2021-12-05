@@ -24,28 +24,20 @@ class ProfessionalsController < ApplicationController
   def create
     @professional = Professional.new(professional_params)
 
-    respond_to do |format|
-      if @professional.save
-        format.html { redirect_to @professional, notice: "Professional was successfully created." }
-        format.json { render :show, status: :created, location: @professional }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @professional.errors, status: :unprocessable_entity }
-      end
+    if @professional.save
+      redirect_to @professional, notice: "Professional was successfully created."
+    else
+      render :new, status: :unprocessable_entity 
     end
   end
 
   # PATCH/PUT /professionals/1 or /professionals/1.json
   def update
-    respond_to do |format|
       if @professional.update(professional_params)
-        format.html { redirect_to @professional, notice: "Professional was successfully updated." }
-        format.json { render :show, status: :ok, location: @professional }
+        redirect_to @professional, notice: "Professional was successfully updated."
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @professional.errors, status: :unprocessable_entity }
+        render :edit, status: :unprocessable_entity 
       end
-    end
   end
 
   # DELETE /professionals/1 or /professionals/1.json
