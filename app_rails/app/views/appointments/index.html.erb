@@ -1,41 +1,73 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Appointments of <%= @professional %></h1>
-<%= form_for :search, url: professional_appointments_path(@professional), method: :get do |f| %>
-  <%= f.label :dateS, "Search by date:" %>
-  <%= f.date_field :dateS, value: @dateS %>
-  <%= f.submit 'Search' %>
-  <%= link_to 'Reset', professional_appointments_path(@professional) %>
-  <% end %>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @appointments.each do |appointment| %>
-      <tr>
-        <td><%= appointment.name %></td>
-        <td><%= appointment.date %></td>
-        <td><%= link_to 'Show', [@professional, appointment] %></td>
-        <% if can? :update, appointment %>
-          <td><%= link_to 'Edit', edit_professional_appointment_path(@professional, appointment) %></td>
-        <% end %>
-        <% if can? :destroy, appointment %>
-        <td><%= link_to 'Cancel', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<% if can? :cancel_all, Appointment %>
-  <p><%= link_to 'Cancel all', cancel_all_professional_appointments_path(@professional), method: :delete, data: { confirm: 'Are you sure?' } %></p>
+<% if notice %>
+  <p class="alert alert-success" id="notice"><%= notice %></p>
 <% end %>
-<% if can? :create, Appointment %>
-  <%= link_to 'New Appointment', new_professional_appointment_path(@professional) %>
-<% end %>
-<%= link_to 'Back', @professional %>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-body">
+          <div class="row-md-7">
+            <div class="col-auto border-right">
+              <div class="row g-3 align-items-center justify-content-center">
+                <div class="col-auto">
+                  <%= form_for :search, url: professional_appointments_path(@professional), method: :get do |f| %>
+                    <%= f.label :dateS, "Search by date:" %>
+                    <%= f.date_field :dateS, value: @dateS, :class => "form-control" %>
+                    <br>
+                    <%= f.submit 'Search', :class => "btn btn-primary btn-sm" %>
+                    <%= link_to 'Reset', professional_appointments_path(@professional), :class => "btn btn-secondary btn-sm" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+          <div class="card-header">Appointments of <%= @professional %></div>
+            <div class="card-body">
+              <div class="row table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Date</th>
+                      <th colspan="3"></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <% @appointments.each do |appointment| %>
+                      <tr>
+                        <td><%= appointment.name %></td>
+                        <td><%= appointment.date %></td>
+                        <td><%= link_to 'Show', [@professional, appointment], :class => "btn btn-primary btn-sm" %></td>
+                        <% if can? :update, appointment %>
+                          <td><%= link_to 'Edit', edit_professional_appointment_path(@professional, appointment), :class => "btn btn-primary btn-sm" %></td>
+                        <% end %>
+                        <% if can? :destroy, appointment %>
+                        <td><%= link_to 'Cancel', [@professional, appointment], method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger btn-sm" %></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+              <% if can? :cancel_all, Appointment %>
+                <p><%= link_to 'Cancel all', cancel_all_professional_appointments_path(@professional), method: :delete, data: { confirm: 'Are you sure? This will cancel all future appointments' }, :class => "btn btn-danger btn-sm" %></p>
+              <% end %>
+              <% if can? :create, Appointment %>
+                <%= link_to 'New Appointment', new_professional_appointment_path(@professional), :class => "btn btn-primary btn-sm" %>
+              <% end %>
+              <%= link_to 'Back', @professional, :class => "btn btn-secondary btn-sm" %>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

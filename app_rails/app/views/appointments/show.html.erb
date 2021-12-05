@@ -1,32 +1,64 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Appointment details</h1>
-
-<p>
-  <strong>Name:</strong>
-  <%= @appointment.name %>
-</p>
-
-<p>
-  <strong>Surname:</strong>
-  <%= @appointment.surname %>
-</p>
-
-<p>
-  <strong>Phone:</strong>
-  <%= @appointment.phone %>
-</p>
-
-<p>
-  <strong>Notes:</strong>
-  <%= @appointment.notes %>
-</p>
-
-<p>
-  <strong>Date:</strong>
-  <%= @appointment.date %>
-</p>
-<% if can? :update, Appointment %>
-  <%= link_to 'Edit', edit_professional_appointment_path(@professional, @appointment) %> |
+<% if notice %>
+  <p class="alert alert-success" id="notice"><%= notice %></p>
 <% end %>
-<%= link_to 'Back', professional_appointments_path(@professional) %>
+
+<div class="container">
+  <div class="row gutters-sm">
+    <div class="col-md-5 justify-content-center">
+      <h2>Appointment details</h2>
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Name</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              <%= @appointment.name %>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Surname</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              <%= @appointment.surname %>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Phone</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              <%= @appointment.phone %>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Notes</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              <%= @appointment.notes %>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Date</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              <%= @appointment.date %>
+            </div>
+          </div>
+          <hr>
+          <% if can? :update, Appointment %>
+            <%= link_to 'Edit', edit_professional_appointment_path(@professional, @appointment), :class => "btn btn-primary btn-sm" %>
+          <% end %>
+          <%= link_to 'Back', professional_appointments_path(@professional), :class => "btn btn-secondary btn-sm" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

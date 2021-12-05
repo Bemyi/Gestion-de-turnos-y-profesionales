@@ -1,6 +1,16 @@
-<h1>Editing Professional</h1>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Editing Professional</div>
+          <div class="card-body">
+            <%= render 'form', professional: @professional %>
+          </div>
+        </div>
+        <%= link_to 'Show', @professional, :class => "btn btn-primary btn-sm" %>
+        <%= link_to 'Back', professionals_path, :class => "btn btn-secondary btn-sm" %>
+      </div>
+    </div>
+  </div>
+</div>
 
-<%= render 'form', professional: @professional %>
-
-<%= link_to 'Show', @professional %> |
-<%= link_to 'Back', professionals_path %>

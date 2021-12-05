@@ -11,29 +11,59 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="form-group">
+    <div class="form-group row justify-content-center">
+      <%= form.label :name %>
+    </div>
+    <div class="form-group row justify-content-center">
+      <div class="col-md-8">
+        <%= form.text_field :name, :class => "form-control" %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :surname %>
-    <%= form.text_field :surname %>
+  <div class="form-group">
+    <div class="form-group row justify-content-center">
+      <%= form.label :surname %>
+    </div>
+    <div class="form-group row justify-content-center">
+      <div class="col-md-8">
+        <%= form.text_field :surname, :class => "form-control" %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :phone %>
-    <%= form.text_field :phone %>
+  <div class="form-group">
+    <div class="form-group row justify-content-center">
+      <%= form.label :phone %>
+    </div>
+    <div class="form-group row justify-content-center">
+      <div class="col-md-8">
+        <%= form.text_field :phone, :class => "form-control" %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :notes %>
-    <%= form.text_field :notes %>
+  <div class="form-group">
+    <div class="form-group row justify-content-center">
+      <%= form.label :notes %>
+    </div>
+    <div class="form-group row justify-content-center">
+      <div class="col-md-8">
+        <%= form.text_field :notes, :class => "form-control" %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :date %>
-    <%= form.datetime_select :date %>
+  <div class="form-group">
+    <div class="form-group row justify-content-center">
+      <%= form.label :date %>
+    </div>
+    <div class="form-group row justify-content-center">
+      <div class="col-md-8">
+        <%= form.datetime_select :date, :class => "form-control" %>
+      </div>
+    </div>
   </div>
 
   <div class="actions">

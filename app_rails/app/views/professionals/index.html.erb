@@ -1,36 +1,48 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Professionals</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @professionals.each do |professional| %>
-      <tr>
-        <td><%= professional.name %></td>
-        <td><%= link_to 'Show', professional %></td>
-        <% if can? :update, professional %>
-          <td><%= link_to 'Edit', edit_professional_path(professional) %></td>
-        <% end %>
-        <% if can? :destroy, professional %>
-          <td><%= link_to 'Destroy', professional, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-<% if can? :create, Professional %>
-  <%= link_to 'New Professional', new_professional_path %> |
+<% if notice %>
+  <p class="alert alert-success" id="notice"><%= notice %></p>
 <% end %>
-<%= link_to 'Export appointments', appointments_grid_path %>
-<% if can? :index, User %>
-  <%= link_to 'Users Administration', users_path %>
-<% end %>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card">
+          <div class="card-header">Professionals</div>
+            <div class="card-body">
+              <div class="row table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th colspan="3"></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <% @professionals.each do |professional| %>
+                      <tr>
+                        <td><%= professional.name %></td>
+                        <td><%= link_to 'Show', professional, :class => "btn btn-primary btn-sm" %></td>
+                        <% if can? :update, professional %>
+                          <td><%= link_to 'Edit', edit_professional_path(professional), :class => "btn btn-primary btn-sm" %></td>
+                        <% end %>
+                        <% if can? :destroy, professional %>
+                          <td><%= link_to 'Destroy', professional, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger btn-sm" %></td>
+                        <% end %>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+              <% if can? :create, Professional %>
+                <%= link_to 'New Professional', new_professional_path, :class => "btn btn-primary btn-sm" %>
+              <% end %>
+              <%= link_to 'Export appointments', appointments_grid_path, :class => "btn btn-primary btn-sm" %>
+              <% if can? :index, User %>
+                <%= link_to 'Users Administration', users_path, :class => "btn btn-primary btn-sm" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

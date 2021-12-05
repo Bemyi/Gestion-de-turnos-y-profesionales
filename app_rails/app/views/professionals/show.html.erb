@@ -1,11 +1,26 @@
-<p id="notice"><%= notice %></p>
+<% if notice %>
+  <p class="alert alert-success" id="notice"><%= notice %></p>
+<% end %>
 
-<h1>Professional details</h1>
-
-<p>
-  <strong>Name:</strong>
-  <%= @professional.name %>
-</p>
-
-<%= link_to 'Appointments', professional_appointments_path(@professional) %> |
-<%= link_to 'Back', professionals_path %>
+<div class="container">
+  <div class="row gutters-sm">
+    <div class="col-md-5 justify-content-center">
+      <h2>Professional details</h2>
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Name</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              <%= @professional.name %>
+            </div>
+          </div>
+          <hr>
+          <%= link_to 'Appointments', professional_appointments_path(@professional), :class => "btn btn-primary btn-sm" %>
+          <%= link_to 'Back', professionals_path, :class => "btn btn-secondary btn-sm" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
