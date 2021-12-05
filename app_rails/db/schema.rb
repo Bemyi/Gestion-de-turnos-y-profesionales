@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 2021_12_01_154143) do
     t.datetime "date"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["name"], name: "index_appointments_on_name", unique: true
     t.index ["professional_id"], name: "index_appointments_on_professional_id"
   end
 
