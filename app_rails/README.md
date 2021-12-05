@@ -148,3 +148,7 @@ Cualquier rol puede descargar grillas.
 ### Listar appointments
 
 Se siguen pudiendo cancelar solo appointments futuros, para validar que el usuario no pueda cancelar viejos se realiza una validación a la hora de cancelar y además no se le muestra el boton de cancel si es un appointment viejo (método en helper de appointment).
+
+### Probar el cancelar
+
+No pude cargar un appointment viejo para los casos de prueba de cancel y cancel_all por la restricción del modelo, no lo carga. Se puede quitar la validación desde model y cargar uno viejo a mano para probar ese caso (validate :date_greater_than_today)
