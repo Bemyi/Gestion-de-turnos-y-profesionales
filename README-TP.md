@@ -138,3 +138,9 @@ A la administración de los usuarios, solo puede acceder un usuario el rol de ad
 ### Corrección de la entrega anterior:
 
 Ya no se filtran los appointments en la vista, se envía un hash desde la clase Presentation con los appointments organizados por fecha y hora.
+
+### Descarga de grillas:
+
+Ahora no se guarda la grilla en un directorio, sino que se le envía al usuario como un descargable, la lógica de la exportación de grilla queda en una clase en el directorio /app/presentation.
+Si se envía el campo professional en blanco, se asume que quiere la grilla de todos los professionals.
+Cualquier rol puede descargar grillas.
